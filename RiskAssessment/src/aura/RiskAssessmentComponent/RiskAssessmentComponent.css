@@ -1,0 +1,4 @@
+.THIS.btnDisp {color: #fff; background: #6bbd6e; margin: 5%; border: none; display: inline-block; outline: 0; padding: 8px 16px; vertical-align: middle; overflow: hidden; text-decoration: none; text-align: center; cursor: pointer; white-space: nowrap; border-radius: 5px;}
+.THIS.errorSec {border: 2px solid rgb(255, 12, 12); padding: 10px; background: #fff; color: rgb(255, 12, 12); width: 100%;}
+.THIS.SuccessSec {border: 2px solid rgb(13, 179, 2); padding: 10px; background: #fff; color: rgb(13, 179, 2); width: 100%;}
+.THIS.dispositionText {color:rgb(255,0,0,);}

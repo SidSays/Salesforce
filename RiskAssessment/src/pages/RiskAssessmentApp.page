@@ -1,0 +1,59 @@
+<apex:page sidebar="false" showHeader="true">
+    <!-- Include Lightning Components for Visualforce JavaScript library (lightning.out.js) -->
+    <apex:includeLightning />
+    <!-- Include Salesforce Lighning Design System (slds). This tag allows us to bypass uploading slds as a static resource -->    
+    <apex:slds />
+	<!-- Create the two-column grid for the Dashboard and Component -->
+    <div class="outer">
+      <div class="slds-grid">
+        <div class="slds-p-horizontal--small slds-size--8-of-12 slds-medium-size--9-of-12 slds-large-size--10-of-12">
+          <div id="dashboard"></div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--4-of-12 slds-medium-size--3-of-12 slds-large-size--2-of-12">
+            <div id="component"></div>
+        </div>
+      </div>
+     </div> 
+    <script>
+	    /*
+    	 * An outer VF page will have set the channel, which we use to query a custom setting for Dashboard Id via the sforce JS API
+         * If the channel is not set (i.e. does not exist) then we present a message to that effect and default to Xfinity Stores
+     	 */
+    	if(typeof channel === 'undefined') {
+            alert("No channel provided. Defaulting to Xfinity Stores.");
+            channel = "XfinityStores";
+        }
+	    <apex:includeScript value="/soap/ajax/39.0/connection.js"/>
+        <apex:includeScript value="/soap/ajax/39.0/apex.js"/>
+        sforce.connection.sessionId = '{!$Api.Session_ID}';
+        var dashboardId;
+		try{
+			var query = "SELECT DashboardId__c FROM RiskAssessmentDashboardId__c WHERE Name = \'" + channel + "\'";
+			var results = sforce.connection.query(query);
+			var records = results.getArray('records');
+			dashboardId = records[0].DashboardId__c;
+		} catch(e) {
+			alert("ERROR: Missing Dashboard Id. Please Contact IT Support.");
+            exit;
+		}
+        $Lightning.use("c:RiskAssessmentLightningOutApp", function(evt) {
+            // Setup the Wave Dashboard component config
+            var dashboardConfig = {
+                dashboardId: dashboardId,
+                width: "1450",
+                height: "800",
+                showTitle: true,
+                showSharing: false
+            };
+            /* 
+             * Create the Risk Assessment Component
+             * The component is surfaced within the "risk_assessment_component" div above
+             * sfdcTodos:
+             * 1. Document the parameters
+             * 2. Look into how to handle a failed creation attempt (i.e. don't try to use it)
+             */
+            $Lightning.createComponent("c:RiskAssessmentComponent", {}, "component", function(cmp, msg, err) {});
+            $Lightning.createComponent("c:dashboardViewer", dashboardConfig, "dashboard", function(cmp, msg, err) {});
+        });
+      </script>
+</apex:page>

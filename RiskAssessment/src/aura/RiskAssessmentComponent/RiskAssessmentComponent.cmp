@@ -1,0 +1,166 @@
+<aura:component controller="RiskAssessmentController" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+	<!-- 
+		controller: server-side apex controller
+		implements: force:appHostable: Interface to enable component for LEX and SF1
+		implements: flexipage:availableForAllPageTypes: Interface to enable component for Lightning Pages / Apps 
+		access: Controls access to the component:
+			private: Only available for attributes and methods
+			public: Only available within the org
+			global: Available in all orgs, e.g. installed package or Lightning App Builder user / Community Builder user in another org
+	-->
+	<!-- sfdcTodo 20170605.1400
+		1. Determine if explicit inclusion of default.css is required 
+		2. Determine if jquery.js is required 
+	-->
+    <!-- Add Static Resources -->
+    <ltng:require styles="{!$Resource.RiskAssessmentDisposition + '/RiskAssessmentDisposition/css/default.css'}" scripts="{!$Resource.RiskAssessmentDisposition + '/RiskAssessmentDisposition/js/jquery.js'}"/>
+        
+    <!-- Declare Attributes -->
+    <aura:attribute name="strDashboardId" type="String"/>
+    <!-- Stores the max # of sales reps that can be selected for dispositioning -->
+    <aura:attribute name="numMaxSalesReps" type="Integer"/>
+    <!-- Stores the list of selected reps -->
+    <aura:attribute name="listReps" type="String[]"/>
+    <!-- Stores the list of selected rep PERNRs -->
+    <aura:attribute name="listPERNR" type="String[]"/>
+    <!-- Stores the selected fiscal month end (defined as a list for future proofing) -->
+    <aura:attribute name="listFiscalMonth" type="String[]"/>
+    <!-- Stores the picklist values for the Risk_Assessment_Disposition__c.Disposition__c field to be used in the modal dialog -->
+    <aura:attribute name="listDispValues" type="String[]"/>
+    <!-- Stores a map of previously retrieved dispositions -->
+    <aura:attribute name="listDisps" type="Map"/>
+    <!-- Stores a map of previously retrieved dispositions in wrapper object format -->
+    <aura:attribute name="listDispositions" type="RiskAssessmentController.DispositionWrap[]"/>
+	<!-- Stores a flag that drives the display of fiscal month end + sales reps, based on logic in the helper -->
+    <aura:attribute name="displayDispositionSelections" type="Boolean" default="false"/>
+    <!-- Stores a flag that controls debug logging - i.e. console.log -->
+    <!-- sfdcTodo 20170607.2220 implement enhancements to retrieve custom setting and set this value -->
+    <aura:attribute name="debugFlag" type="Boolean" default="true"/>
+    <aura:attribute name="postInit" type="Boolean"/>
+    
+    <!-- Handle OnLoad Event -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <!-- Handle Wave Dashboard Event -->
+    <aura:handler event="wave:selectionChanged" action="{!c.handleWaveSelections}"/>
+
+    <!-- Adding Icon and Label to the Component -->
+    <h2>
+        <lightning:icon iconName="standard:marketing_actions" size="medium"/>&nbsp;Risk Assessment Disposition
+    </h2>
+    <!-- sfdcTodo 20170605.1452 See about renaming showPopup to enterDispositions (or something like that) -->
+    <!-- Disposition Button -->
+    <button type="button" class="btnDisp" onclick="{!c.showPopup}">Disposition</button>
+    
+    <!-- Error/Success Message Section -->
+    <div id="messageSec" class="errorSec" style="display:none;"></div>
+    
+    <!-- Display Selected Sales Reps IFF 0 < # Selected < numMaxSalesReps -->
+    <aura:if isTrue="{! !empty(v.listDispositions)}">
+        <aura:if isTrue="{!v.displayDispositionSelections}">
+            <!-- showing selected Fiscal Month End -->
+            <table class="tableStyle" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Selected Fiscal Month End</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {!v.listFiscalMonth[0]}
+                        </td>                
+                    </tr>
+                </tbody>	
+            </table>
+            
+            <!-- showing selected Sales reps -->
+            <table class="tableStyle" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Selected Sales Reps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.listDispositions}" var="desposition" indexVar="idx">
+                        <tr>
+                            <td>
+                                {!desposition.strSalesRep}
+                                <aura:if isTrue="{!desposition.strId != ''}">
+                                    <br/>
+	                                <a href="{!'/one/one.app?#/sObject/'+ desposition.strId + '/view'}" target="_blank">View Existing Disposition</a>
+                                </aura:if>
+                            </td>                
+                        </tr>
+                    </aura:iteration>
+                </tbody>	
+            </table>
+        </aura:if>
+    </aura:if>
+    
+    <!-- Capture and Submit Dispositions via Modal Dialog -->
+    <div class="modalContainer">
+        <div class="modalBackdrop">
+            <div class="modalBg">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2>Enter Disposition Details (Existing Dispositions are Prepopulated)</h2>
+                        <!-- sfdcTodo 20170605.1506 Evaluate replacing '&#215;' with 'x' -->
+                        <a href="javascript:void(0);" class="modal-close" onclick="{!c.hidePopup}">&#215;</a>
+                    </div>
+                    <!-- Display Selected Fiscal Month End Date -->
+                    <div class="modal-body ">
+                        <h2>{!v.listFiscalMonth[0]}</h2>
+                        <table class="tableStyle" cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Sales Rep</th>
+                                    <th>PERNR</th>
+                                    <th>Disposition</th>
+                                    <th>Comments</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Display Selected Sales Reps w/ Consideration for Existing Disposition Records -->
+                                <aura:iteration items="{!v.listDispositions}" var="desposition" indexVar="idx">
+                                    <tr>
+                                        <td>
+                                            {!desposition.strSalesRep}
+                                        </td>
+                                        <td>
+                                            {!desposition.strPERNR}
+                                        </td>
+                                        <td>
+											<ui:inputSelect value="{!desposition.strDisposition}">
+                                                <ui:inputSelectOption text="" label="Select a Disposition"/>
+                                                <aura:iteration items="{!v.listDispValues}" var="disp">
+                                                    <ui:inputSelectOption text="{!disp}" label="{!disp}"/>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                            <div class="dispositionText" id="{!'disposition' + idx}" style="color:rgb(255,0,0);"></div>
+                                        </td>
+                                        <td>
+                                            <ui:inputText class="inputLong" value="{!desposition.strComment}"/>
+                                        </td>
+                                        <td>
+                                            <aura:if isTrue="{!desposition.strId != ''}">
+                                                <a href="{!'/one/one.app?#/sObject/'+ desposition.strId + '/view'}" target="_blank">View Existing Disposition</a>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>	
+                        </table>
+                    </div>
+                    
+                    <!-- Save / Cancel Buttons for Modal Dialog -->
+                    <div class="modal-footer">
+                        <a href="javascript:void(0);" class="btn btnBlue" onclick="{!c.saveDispositions}">Save</a>
+                        <a href="javascript:void(0);" class="btn btnDefault" onclick="{!c.hidePopup}">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<apex:page sidebar="false" showHeader="true">
+    <script>
+        var channel = "InboundSales";
+    </script>
+    <apex:include pageName="RiskAssessmentApp" />
+</apex:page>
