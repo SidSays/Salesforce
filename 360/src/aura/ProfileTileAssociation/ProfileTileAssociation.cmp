@@ -1,0 +1,63 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="TilesController">
+	
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="availableTileValues" type="String[]" default=""/>
+    <aura:attribute name="selectedTileValues" type="String[]" default=""/>
+    <aura:attribute name="profilesList" type="String[]" default=""/>
+    <aura:attribute name="profileName" type="String" default=""/>
+    <aura:attribute name="saveMessage" type="String" default=""/>
+    
+    <div class="slds-form-element slds-p-bottom_large">
+        <!--<label class="slds-form-element__label" for="combobox-unique-id">Profiles</label>-->
+        <div class="slds-form-element__control">
+           <div class="slds-combobox_container slds-size_small">
+               <ui:inputSelect aura:id="picklistOptions" label="Profiles" change="{!c.onSelectChange}">
+               	<aura:iteration items="{!v.profilesList}" var="level">
+                         <ui:inputSelectOption text="{!level}" label="{!level}"/>
+                    </aura:iteration>
+               </ui:inputSelect>
+            </div>
+        </div>
+    </div>        
+    
+	<div class="slds-dueling-list slds-p-bottom_x-large">
+        <div class="slds-dueling-list__column">
+            <span class="slds-form-element__label">Available Tiles</span>
+       		<div class="slds-dueling-list__options" role="application">
+                <ui:inputSelect aura:id="leftOptions" class="slds-dueling-list__options slds-listbox slds-listbox_vertical" multiple="true">
+                    <aura:iteration items="{!v.availableTileValues}" var="level">
+                         <ui:inputSelectOption text="{!level}" label="{!level}" class="slds-listbox__option_plain"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+        
+        <div class="slds-dueling-list__column">
+            <lightning:buttonicon iconName="utility:right" size="medium" class="slds-button slds-button_icon-container no-border" onclick="{!c.moveLeft}" alternativeText="Move Selection to Second Category"/>                      
+            <lightning:buttonicon iconName="utility:left" size="medium" class="slds-button slds-button_icon-container no-border" onclick="{!c.moveRight}" alternativeText="Move Selection to First Category"/>                        
+        </div>
+        
+        <div class="slds-dueling-list__column">
+            <span class="slds-form-element__label">Selected Tiles</span>
+            <div class="slds-dueling-list__options" role="application">
+                <ui:inputSelect aura:id="rightOptions" class="slds-dueling-list__options slds-listbox slds-listbox_vertical" multiple="true">
+                    <aura:iteration items="{!v.selectedTileValues}" var="level">
+                         <ui:inputSelectOption text="{!level}" label="{!level}" class="slds-listbox__option_plain"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+        
+        <div class="slds-dueling-list__column">
+            <lightning:buttonicon iconName="utility:up" size="medium" class="slds-button slds-button_icon-container no-border" onclick="{!c.moveUp}" alternativeText="Move Selection Up"/>                        
+            <lightning:buttonicon iconName="utility:down" size="medium" class="slds-button slds-button_icon-container no-border" onclick="{!c.moveDown}" alternativeText="Move Selection Down"/>
+        </div>
+    </div>
+    
+    <div>
+        <lightning:button variant="neutral" label="Cancel" onclick="{!c.onCancel}" />
+        <lightning:button variant="neutral" label="Save" onclick="{!c.onSave}" />
+    </div>
+    <p>{!v.saveMessage}</p>
+        
+</aura:component>

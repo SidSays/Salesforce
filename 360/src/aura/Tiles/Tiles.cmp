@@ -1,0 +1,46 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" controller="TilesController">
+	
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:attribute name="tiles" type="Object[]" />
+    <aura:attribute name="prefixURL" type="String" default="/sfc/servlet.shepherd/version/download/"/>
+	
+    <center>
+        <div class="slds">
+            <c:CoachAnalyticsHeader />
+            
+            <div class="slds-grid slds-wrap slds-grid_align-spread tile-size">
+                <aura:iteration items="{!v.tiles}" var="item">
+                    <div class="slds-col slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="slds-container--small slds-p-around--medium" >
+                            <div class="slds-text-align--center">
+                                <div class="slds-tile">
+                                    <aura:if isTrue="{!item.iconId != null}">	
+                                        <img src="{!v.prefixURL + item.iconId}" width="35" height="40"/>
+    									<aura:set attribute="else">
+      										<lightning:icon iconName="{!item.tile.Tile_Icon__c}" size="medium"/>
+    									</aura:set>
+  									</aura:if>                                     
+                                    
+                                    
+                                    <aura:if isTrue="{!item.tile.IsExternal__c}">
+    									<p class="slds-tile__title slds-truncate slds-p-top_small">
+                                            <a href="{!item.tile.Tile_URL__c}" target="_blank">{!item.tile.Name}</a>
+                                        </p>
+    									<aura:set attribute="else">
+      										<p class="slds-tile__title slds-truncate slds-p-top_small">
+                                                <a href="{!item.tile.Tile_URL__c}">{!item.tile.Name}</a>
+                                            </p>
+    									</aura:set>
+  									</aura:if>                                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:iteration>
+                <aura:if isTrue="{!mod(v.tiles.length, 3) == 2}">
+                  <div class="slds-col slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-3" />
+                </aura:if>
+            </div>
+        </div>
+    </center>
+</aura:component>
