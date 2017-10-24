@@ -1,0 +1,132 @@
+<apex:page controller="EarthquakeSvcCont" title="BW Earthquake Assignment" showHeader="false" cache="false" docType="html-5.0">
+
+<!--Include the style.css to apply UI-->
+<apex:stylesheet value="{!$Resource.Earthquake}" />
+
+<!-- Include the Google Maps API to use their maps -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIJXasRv9lCIGr_4I5vZpIWTM4iqiy8UY"></script>
+    
+<!--Script to instatiate a GoogleMap and set default Map-->
+<!-- Source : https://developers.google.com/maps/documentation/javascript/markers -->
+<script type="text/javascript">
+// Javascript variable declarations
+var Lat=0, Long=0, map, city, earthquakesList, markers = [];
+// On load of the page, set the default map position with center as user's current Geolocation	
+window.onload = function(e) {
+	navigator.geolocation.getCurrentPosition(GetLocation);
+	function GetLocation(location) {
+	Lat = location.coords.latitude;
+	Long = location.coords.longitude;
+    createMap(Lat, Long);
+    }    
+};
+// Javascript function that initializes the GoogleMap based on Latitude and Longitude
+function initialize(latitude, longitude) {
+    Lat = latitude;
+    Long = longitude;
+    createMap(Lat,Long);
+    showEarthquakes();
+};
+// Javascript function to create a Google Map, Initialize to default and receive from controller
+function showEarthquakes() {
+    //Visualforce remoting to call apex method to get list of earthquakes by passing parameters latitude and longitude
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.EarthquakeSvcCont.getResponse}', Lat, Long,
+        function(result, event) {
+            if (event.status) {
+                earthquakesList = result;
+                //removing the "&quot" from the string returned as response body from apex method
+                earthquakesList = JSON.parse(earthquakesList.replace(/(&quot\;)/g, "\""));
+
+                if (earthquakesList.earthquakes.length === 0) {
+                    alert("No Earthquake Information is available for this City ");
+                } else {
+
+                    //calling the method to create markers for all earthquakes in the returned response
+                    pointEarthquakes(earthquakesList);
+                }
+            } else if (event.type === 'exception') {
+                console.log(event.type);
+            } else {
+                console.log(event.message);
+            }
+        }, {
+            escape: true
+        });
+}
+
+function pointEarthquakes(earthquakesList) {
+    for (var i = 0; i < earthquakesList.earthquakes.length; i++) {
+        var myLatlng = new google.maps.LatLng(earthquakesList.earthquakes[i].lat, earthquakesList.earthquakes[i].lng);
+		//reformatting date to show in info window
+        var dateTime = earthquakesList.earthquakes[i].datetime;
+        var date = new Date(dateTime);
+        map.setZoom(7);
+        var content = '<div>Date Time: ' + date + '</br> Depth: ' + earthquakesList.earthquakes[i].depth + ' </br> Magnitude: ' + earthquakesList.earthquakes[i].magnitude + '</div>';
+        var marker = new google.maps.Marker({
+            map: map,
+            animation: google.maps.Animation.DROP,
+            position: myLatlng
+        });
+        //adding the marker to an array to remove this before a new search  
+        markers.push(marker);
+        var infowindow = new google.maps.InfoWindow()
+        google.maps.event.addListener(marker, 'click', (function(marker, content, infowindow) {
+            return function() {
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            };
+        })(marker, content, infowindow));
+    }
+}
+
+function createMap(Lat, Long) {
+    //Set map options to receive latitude and longitude from values received from the initialize function (coming from controller)
+    var LatLng = {
+        lat: Lat,
+        lng: Long
+    };
+    var mapOptions = {
+        zoom: 11,
+        center: LatLng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    // Set the Marker to the Map and define attributes	
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    var marker = new google.maps.Marker({
+        position: LatLng,
+        animation: google.maps.Animation.DROP,
+        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+        map: map
+    });
+};
+</script>    
+    
+<!--Visualforce Page UI build Up-->
+    <!-- Core content with map and search input -->
+    <h1>GeoNames Recent Earthquake Search</h1>
+	 <apex:form style="width:100%" id="theForm">
+	        <h2>Select a city to view recent earthquakes in that vicinity</h2>
+    <!-- Upon Search button,get the map to point to the city selected by the user -->
+        <!-- Apply predictive search option -->	         			 
+	        <apex:inputText list="{!citiesStr}" value="{!selectedCity}" required="true" />
+	        <!-- On click of the button, first call the controller search function,and upon completion of  -->    
+	        <apex:commandButton id="saveBtn" action="{!search}" value="View Earthquakes" oncomplete="initialize({!latitude},{!longitude});" status="searchStatus" />
+	        <apex:actionStatus id="searchStatus">
+	            <apex:facet name="start">&nbsp;&nbsp;&nbsp;<img src="/img/loading.gif" /> Searching for earthquakes at that location, please wait...</apex:facet>  
+         	
+	        </apex:actionStatus><br/> 
+	</apex:form>
+    
+<!-- Create Output -->	
+    <apex:outputPanel id="pnlResults">
+	    <apex:pageMessages /> 
+        <!-- Map canvas -->
+        <div id="map-canvas"></div>
+        <!-- Results from user Based on City Selected -->
+        <div class="results">
+            <apex:outputPanel ></apex:outputPanel>
+        </div>
+    </apex:outputPanel>
+   
+</apex:page>
