@@ -1,0 +1,49 @@
+<aura:component controller="IndirectStore">
+    <aura:attribute name="loggedInUser" type="User"/>
+    <aura:attribute name="storeTest" type="Account"/>
+    <aura:attribute name="edit" type="boolean" default="true"/>
+    <aura:attribute name="readOnly" type="boolean" default="false"/> 
+    <aura:registerEvent name="appEvent" type="c:IndirectAddButtonEvent"/>    
+    <aura:attribute name="storeActivity" type="Store_Activity__c"/>    
+    <aura:attribute name="StoreActivityCatagory" type="String"/>
+    <aura:attribute name="storeVisitCategory" type="Store_Visit_Activity_Category__c[]"/>
+    <aura:attribute name="LookupFieldValue" type="String[]"/>
+    <aura:attribute name="LookupField" type="String"/>    
+    <aura:handler name="onSaveSuccess" event="force:recordSaveSuccess" action="{!c.handleSaveSuccess}"/>   
+    
+    
+    
+    <aura:if isTrue="{!v.edit &amp;&amp; (v.storeActivity.Id != null)}"> 
+        <ui:message aura:id="messagebox" title="Error" class="slds-hide" severity="error" 
+                    closable="true">    
+            <ui:outputText value=""/>
+        </ui:message>
+        <aura:if isTrue="{!v.LookupFieldValue != null}">            
+            <aura:iteration items="{!v.LookupFieldValue}" var="value">          
+                <div style="margin-left:16px;">
+                    <aura:if isTrue="{!value != 'Name of Rgnl Mgr. and what was reviewed?'}">
+                        <span style="color:red;font-size:150%;">*</span>
+                    </aura:if> 
+                    <button class="slds-button slds-button--neutral slds-button--brand"
+                            onclick="{!c.contactsSelection}" data-record="{!value}">{!value}</button>
+                    
+                </div>
+                <br/>
+            </aura:iteration>
+        </aura:if>
+        <div><force:recordEdit aura:id="edit" recordId="{!v.storeActivity.Id}" /></div>
+        <button class="slds-button slds-button--neutral slds-button--brand" onclick="{!c.save}">Save</button>
+    </aura:if>
+    <aura:if isTrue="{!v.readOnly &amp;&amp; (v.storeActivity.Id != null)}">
+        <aura:if isTrue="{!v.LookupFieldValue != null}">
+            <aura:iteration items="{!v.LookupFieldValue}" var="value">
+                <div style="margin-left:14px;">
+                    <button class="slds-button slds-button--inverse" >{!value} </button>                   
+                </div>
+                <br/>
+            </aura:iteration>
+        </aura:if>  
+        <force:recordView recordId="{!v.storeActivity.Id}" type="FULL"/>
+    </aura:if>
+    
+</aura:component>

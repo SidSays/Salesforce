@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>PROFILES_FOR_MCAT_AUTO_CREATE</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>These are the profiles used for MCAT Auto Create Users</shortDescription>
+        <value>XC Portfolio AE,XC AE Contractors,XC Manager,XC SME,System Administrator</value>
+    </labels>
+    <labels>
+        <fullName>XCP_Portal_Record_Type_Names</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCP Portal Record Type Names</shortDescription>
+        <value>Report Property Service Issue,Request Event Support,Request Support for Multiple Move Ins,Request XFINITY Materials for Residents,Request a Community Account Representative Visit,Provide Feedback</value>
+    </labels>
+        <labels>
+        <fullName>ByPassDynamicAddition</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ByPassDynamicAddition</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
+        <fullName>ByPassDynamicTurf</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ByPassDynamicTurf</shortDescription>
+        <value>XXX</value>
+    </labels>
+    <labels>
+        <fullName>SharedDataUserId</fullName>
+        <categories>User Id</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SharedDataUserId</shortDescription>
+        <value>005G0000004HHd8</value>
+    </labels>
+</CustomLabels>

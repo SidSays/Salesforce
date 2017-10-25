@@ -1,0 +1,3 @@
+Case: {!Case.Link}
+Case Number: {!Case.CaseNumber}
+Created By:{!Case.CreatedBy}

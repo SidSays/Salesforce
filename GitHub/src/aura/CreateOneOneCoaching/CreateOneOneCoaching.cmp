@@ -1,0 +1,130 @@
+<aura:component implements="force:hasRecordId" controller="CoachingPayrollController">    
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="newOneOneCoaching" type="Object" access="private"/>
+    <aura:attribute name="simpleNewOneOneCoaching" type="Object" access="private"/>
+    <aura:attribute name="newOneOneCoachingError" type="String" access="private"/>
+    <aura:attribute name="workCoachingId" type="String"/>
+    <aura:attribute name="oneOneCoachingRecords" type="one_one_Coaching__c[]"/>
+    <aura:attribute name="userDetails" type="User"/>
+    <aura:attribute name="pernrId" type="String"/>
+    <aura:attribute name="isRep" type="Boolean" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:OneOneCoachingDetailsEvent" action="{!c.gettingAllCoachingRecords}"/>
+    <force:recordData aura:id="OneOneCoachingRecordCreator"
+                      recordId="{!v.recordId}"            
+                      layoutType="FULL"                    
+                      targetRecord="{!v.newOneOneCoaching}"
+                      targetFields="{!v.simpleNewOneOneCoaching}"
+                      targetError="{!v.newOneOneCoachingError}"
+                      recordUpdated="{!c.handleRecordUpdated}"
+                      mode="EDIT"
+                      
+                      />
+   
+    
+    <div class="slds-page-header" role="banner">
+        <h1 class="slds-page-header__title slds-m-right--small
+                   slds-truncate slds-align-left">COACH  Create 1:1 Record</h1>
+    </div>
+    
+    <!-- Display Lightning Data Service errors, if any -->
+    <aura:if isTrue="{!not(empty(v.newOneOneCoachingError))}">
+        <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+                {!v.newOneOneCoachingError}
+            </ui:message>
+        </div>
+    </aura:if>
+    
+    <div class="slds-tile__detail slds-text-body_small slds-p-around_x-small">
+        <dl class="slds-list_horizontal slds-wrap">
+            <dt class="slds-item_label slds-text-color_weak" style="font-weight:bold">Manager:</dt>
+            <dd class="slds-item_detail slds-truncate" title="Description for first label">{!v.userDetails.Manager.Name}</dd>
+            <dt class="slds-item_label slds-text-color_weak" style="font-weight:bold">Sales Employee:</dt>
+            <dd class="slds-item_detail slds-truncate" title="Description for second label">{!v.userDetails.Name}</dd>
+        </dl>
+    </div>
+    <aura:if isTrue="{!v.isRep}">
+        <div class="slds-p-around_x-small ">
+            <div class="slds-text-color_weak slds-text-body_small" style="font-weight:bold">Strengths</div>
+            <ui:inputTextArea class="slds-input" aura:id="strengthId" rows="1"
+                              labelClass="slds-form-element__label" value="{!v.simpleNewOneOneCoaching.Strengths__c}"/>
+        </div>
+        
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak slds-text-body_small" style="font-weight:bold">Opportunities</div>
+            <ui:inputTextArea class="slds-input" aura:id="oppId" rows="1"
+                              labelClass="slds-form-element__label" value="{!v.simpleNewOneOneCoaching.Opportunities__c}"/>
+        </div>
+        
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak slds-text-body_small" style="font-weight:bold">Action Plans</div>
+            <ui:inputTextArea class="slds-input" aura:id="actionPlanId" rows="1"
+                              labelClass="slds-form-element__label" value="{!v.simpleNewOneOneCoaching.Action_Plan__c}"/>
+        </div>
+        
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak" style="font-weight:bold; font-size:12px !important;">Manager Comments</div>
+            <aura:if isTrue="{!not(empty(v.simpleNewOneOneCoaching.Manager_Comments__c))}">
+                <ui:outputRichText class="slds-text-longform" value="{!v.simpleNewOneOneCoaching.Manager_Comments__c}"/>
+                <aura:set attribute="else">
+                    <ui:outputRichText class="slds-text-longform" value="[No Data]"/>
+                </aura:set>
+            </aura:if>
+        </div>  
+        
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak" style="font-weight:bold; font-size:12px !important;">Status</div>
+            <ui:inputSelect disabled="true">
+                <ui:inputSelectOption text="{!v.simpleNewOneOneCoaching.Status__c}" label="{!v.simpleNewOneOneCoaching.Status__c}" value="true"/>
+            </ui:inputSelect>
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!!v.isRep}">
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak slds-text-body_small" style="font-weight:bold">Strengths</div>
+            <aura:if isTrue="{!not(empty(v.simpleNewOneOneCoaching.Strengths__c))}">
+                <ui:outputRichText class="slds-text-longform" value="{!v.simpleNewOneOneCoaching.Strengths__c}"/>
+                <aura:set attribute="else">
+                    <ui:outputRichText class="slds-text-longform" value="[No Data]"/>
+                </aura:set>
+            </aura:if>
+            
+        </div>
+        <div class="slds-p-around_x-small slds-text-body_small">
+            <div class="slds-text-color_weak" style="font-weight:bold">Opportunities</div>
+            <aura:if isTrue="{!not(empty(v.simpleNewOneOneCoaching.Opportunities__c))}">
+                <ui:outputRichText class="slds-text-longform" value="{!v.simpleNewOneOneCoaching.Opportunities__c}"/>
+                <aura:set attribute="else">
+                    <ui:outputRichText class="slds-text-longform" value="[No Data]"/>
+                </aura:set>
+            </aura:if>
+        </div>
+        <div class="slds-p-around_x-small slds-text-body_small">
+            <div class="slds-text-color_weak" style="font-weight:bold">Action Plan</div>
+            <aura:if isTrue="{!not(empty(v.simpleNewOneOneCoaching.Action_Plan__c))}">
+                <ui:outputRichText class="slds-text-longform" value="{!v.simpleNewOneOneCoaching.Action_Plan__c}"/>
+                <aura:set attribute="else">
+                    <ui:outputRichText class="slds-text-longform" value="[No Data]"/>
+                </aura:set>
+            </aura:if>
+        </div>
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak" style="font-weight:bold; font-size:12px !important;">Manager Comments</div>
+            <ui:inputTextArea class="slds-input" aura:id="commentId" rows="1"
+                              labelClass="slds-form-element__label" value="{!v.simpleNewOneOneCoaching.Manager_Comments__c}"/>
+        </div>  
+        
+        <div class="slds-p-around_x-small">
+            <div class="slds-text-color_weak" style="font-weight:bold; font-size:12px !important;">Status</div>
+            <ui:inputSelect aura:id="StatusId" change="{!c.onChangeFunction}"/>
+        </div>        
+    </aura:if>
+    <div>
+        <center>
+            <button class="slds-button slds-button--brand" onclick="{!c.saveOneOneCoaching}" id="saveId">Save</button>
+            <button class="slds-button slds-button--neutral " onclick="{!c.cancel}">Cancel</button>
+        </center>
+    </div>  
+</aura:component>

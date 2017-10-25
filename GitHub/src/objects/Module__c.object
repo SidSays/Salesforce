@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>true</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Created to link properties and assigned CARs to modules so that XC manager can see what properties are assigned to which modules, look at the module as a whole and eventually feed data from the modules to NDW.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableDivisions>true</enableDivisions>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Assigned_CAR__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Created to assign a module to CAR.</description>
+        <externalId>false</externalId>
+        <label>Assigned CAR</label>
+        <lookupFilter>
+            <active>true</active>
+            <booleanFilter>1 OR 2</booleanFilter>
+            <filterItems>
+                <field>User.Profile.Name</field>
+                <operation>equals</operation>
+                <value>Xfinity CAR</value>
+            </filterItems>
+            <filterItems>
+                <field>$Profile.Name</field>
+                <operation>equals</operation>
+                <value>System Administrator, XC Integration Profile</value>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Modules</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Division__c</fullName>
+        <description>Custom division field driven by region.</description>
+        <externalId>false</externalId>
+        <formula>CASE(Region__c, 
+&quot;Beltway Market&quot;, &quot;Northeast&quot;, 
+&quot;Freedom Market&quot;, &quot;Northeast&quot;, 
+&quot;Keystone Market&quot;, &quot;Northeast&quot;, 
+&quot;Houston Market&quot;, &quot;West&quot;, 
+&quot;Big South Region&quot;, &quot;Central&quot;, 
+&quot;Greater Chicago Market&quot;, &quot;Central&quot;, 
+&quot;Greater Boston Market&quot;, &quot;Northeast&quot;, 
+&quot;Heartland Region&quot;, &quot;Central&quot;, 
+&quot;Florida Region&quot;, &quot;Central&quot;, 
+&quot;Western New England Market&quot;, &quot;Northeast&quot;,
+&quot;Twin Cities Market&quot;, &quot;West&quot;, 
+&quot;California Market&quot;, &quot;West&quot;, 
+&quot;Portland/Salem Market&quot;, &quot;West&quot;, 
+&quot;Global&quot;, &quot;Global&quot;, 
+&quot;Seattle Market&quot;, &quot;West&quot;, 
+&quot;Central&quot;, &quot;Central&quot;, 
+&quot;Northeast&quot;, &quot;Northeast&quot;, 
+&quot;West&quot;, &quot;West&quot;,
+&quot;Multiple&quot;, &quot;Multiple&quot;,
+&quot;Mountain West Region&quot;, &quot;West&quot;,
+ &quot;None&quot;)</formula>
+        <label>Division</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Module_Description__c</fullName>
+        <description>For Module Description.</description>
+        <externalId>false</externalId>
+        <label>Module Description</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Region__c</fullName>
+        <description>Region field with 15 regions.</description>
+        <externalId>false</externalId>
+        <label>Region</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>true</sorted>
+                <value>
+                    <fullName>Beltway Market</fullName>
+                    <default>false</default>
+                    <label>Beltway Market</label>
+                </value>
+                <value>
+                    <fullName>Big South Region</fullName>
+                    <default>false</default>
+                    <label>Big South Region</label>
+                </value>
+                <value>
+                    <fullName>California Market</fullName>
+                    <default>false</default>
+                    <label>California Market</label>
+                </value>
+                <value>
+                    <fullName>Florida Region</fullName>
+                    <default>false</default>
+                    <label>Florida Region</label>
+                </value>
+                <value>
+                    <fullName>Freedom Market</fullName>
+                    <default>false</default>
+                    <label>Freedom Market</label>
+                </value>
+                <value>
+                    <fullName>Global</fullName>
+                    <default>false</default>
+                    <label>Global</label>
+                </value>
+                <value>
+                    <fullName>Greater Boston Market</fullName>
+                    <default>false</default>
+                    <label>Greater Boston Market</label>
+                </value>
+                <value>
+                    <fullName>Greater Chicago Market</fullName>
+                    <default>false</default>
+                    <label>Greater Chicago Market</label>
+                </value>
+                <value>
+                    <fullName>Heartland Region</fullName>
+                    <default>false</default>
+                    <label>Heartland Region</label>
+                </value>
+                <value>
+                    <fullName>Houston Market</fullName>
+                    <default>false</default>
+                    <label>Houston Market</label>
+                </value>
+                <value>
+                    <fullName>Keystone Market</fullName>
+                    <default>false</default>
+                    <label>Keystone Market</label>
+                </value>
+                <value>
+                    <fullName>Mountain West Region</fullName>
+                    <default>false</default>
+                    <label>Mountain West Region</label>
+                </value>
+                <value>
+                    <fullName>Portland/Salem Market</fullName>
+                    <default>false</default>
+                    <label>Portland/Salem Market</label>
+                </value>
+                <value>
+                    <fullName>Seattle Market</fullName>
+                    <default>false</default>
+                    <label>Seattle Market</label>
+                </value>
+                <value>
+                    <fullName>Twin Cities Market</fullName>
+                    <default>false</default>
+                    <label>Twin Cities Market</label>
+                </value>
+                <value>
+                    <fullName>Western New England Market</fullName>
+                    <default>false</default>
+                    <label>Western New England Market</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Module</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <webLinks>
+        <fullName>Assign_Property</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Assign Property</masterLabel>
+        <openType>sidebar</openType>
+        <page>ModuleToPropertyCARAssignment</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Remove_Property</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Remove Property</masterLabel>
+        <openType>sidebar</openType>
+        <page>ModuleToPropertyCARUnAssign</page>
+        <protected>false</protected>
+    </webLinks>
+    <nameField>
+        <label>Module Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Modules</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

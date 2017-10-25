@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Disposition_Approver__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>This field will update with the user that updated the Status to Approved.</description>
+        <externalId>false</externalId>
+        <label>Disposition Approver</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Risk_Assessment_Dispositions1</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Disposition_Comments__c</fullName>
+        <externalId>false</externalId>
+        <label>Disposition Analyst Comments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Disposition__c</fullName>
+        <externalId>false</externalId>
+        <label>Disposition Type</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Valid Performance – Approved</fullName>
+                    <default>false</default>
+                    <label>Valid Performance – Approved</label>
+                </value>
+                <value>
+                    <fullName>Valid Performance – Assigned Event</fullName>
+                    <default>false</default>
+                    <label>Valid Performance – Assigned Event</label>
+                </value>
+                <value>
+                    <fullName>Valid Performance – Other</fullName>
+                    <default>false</default>
+                    <label>Valid Performance – Other</label>
+                </value>
+                <value>
+                    <fullName>Further Review / Research Required</fullName>
+                    <default>false</default>
+                    <label>Further Review / Research Required</label>
+                </value>
+                <value>
+                    <fullName>Coaching</fullName>
+                    <default>false</default>
+                    <label>Coaching</label>
+                </value>
+                <value>
+                    <fullName>Written Warning</fullName>
+                    <default>false</default>
+                    <label>Written Warning</label>
+                </value>
+                <value>
+                    <fullName>Final Written Warning</fullName>
+                    <default>false</default>
+                    <label>Final Written Warning</label>
+                </value>
+                <value>
+                    <fullName>Termination</fullName>
+                    <default>false</default>
+                    <label>Termination</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Fiscal_Month_End__c</fullName>
+        <externalId>false</externalId>
+        <label>Fiscal Month End</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Risk_Assessment_Analyst__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Disposition Analyst</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Risk_Assessment_Dispositions2</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Risk_Assessment_Comments__c</fullName>
+        <externalId>false</externalId>
+        <label>Disposition Approver Comments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sales_Rep_PERNR__c</fullName>
+        <externalId>false</externalId>
+        <label>Sales Rep PERNR</label>
+        <length>32</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sales_Rep_Text__c</fullName>
+        <externalId>false</externalId>
+        <label>Sales Rep</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>New</fullName>
+                    <default>true</default>
+                    <label>New</label>
+                </value>
+                <value>
+                    <fullName>Submitted for Approval</fullName>
+                    <default>false</default>
+                    <label>Submitted for Approval</label>
+                </value>
+                <value>
+                    <fullName>Further Review</fullName>
+                    <default>false</default>
+                    <label>Further Review</label>
+                </value>
+                <value>
+                    <fullName>Sent to Security</fullName>
+                    <default>false</default>
+                    <label>Sent to Security</label>
+                </value>
+                <value>
+                    <fullName>Approved</fullName>
+                    <default>false</default>
+                    <label>Approved</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+</CustomObject>

@@ -1,0 +1,96 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="CommunityManageRequestsController" >
+    <aura:attribute name="filteredCaseslst" type="List"/>
+    <aura:attribute name="allCaseslst" type="List"/>
+    <aura:attribute name="searchedText" type="String"/>
+    <aura:attribute name="propertylst" type="String[]"/>
+    <aura:attribute type="Boolean" name="sortAsc" />
+    <aura:attribute type="String" name="sortField" />
+    <aura:attribute type="List" name="requestTypesForCommunityPortal" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div aura:id="mainContainer">   
+        <div class="pull-left">
+            <lightning:button variant="brand" label="+ Submit Requests" onclick="{!c.navigateToSubmitRequests}"/>
+        </div>        
+        <br/>
+        <hr width="100%"/>        
+        <div id="searchContainer" class="slds-form-element">          
+            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                <input type="text" class="slds-input slds-size_1-of-6" id="searchbox-id" 
+                       aria-autocomplete="list" aria-controls="listbox-unique-id" autocomplete="off" 
+                       role="textbox" placeholder="Search for a request..." onclick="" onkeyup="{!c.searchData}" />
+                <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input-has-icon_left" title="Description of icon when needed">
+                    <c:svg class="slds-button__icon" 
+                           xlinkHref="/resource/SLDS100/assets/icons/utility-sprite/svg/symbols.svg#search"/>
+                </span>              
+                
+            </div>
+        </div> 
+        <br/>
+        <div id="bodyContainer">
+            <label class="pull-left">Filter messages by:</label>
+            <span id="clearFilterButton" class="pull-right"><a onclick="{!c.clearAllFilter}">Clear all filters</a></span>        
+        </div>
+        <br/>
+        <!-- Case Table -->       
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer" width="100%" id="dataTable">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col" class="slds-size_1-of-4" >
+                        <lightning:select name="selectRequestType" label="Request Type" onchange="{!c.onchangeValue}" aura:id="myRequestType" >
+                            <option value="--Select--" text="--Select--" selected = "true"/>
+                        	<aura:iteration items="{!v.requestTypesForCommunityPortal}" var="requestType">
+                            	<option value="{!requestType}" text="{!requestType}"></option>
+                            </aura:iteration>                            
+                        </lightning:select>                        
+                    </th>
+                    <th scope="col" class="slds-size_1-of-4">
+                        <lightning:select name="selectStatus" label="Status" onchange="{!c.onchangeValue}" aura:id="myStatus" >
+                             <option value="--Select--" text="--Select--" selected = "true"/>
+                             <option value="Open" text="Open" />
+                            <option value="Closed" text="Closed" />                                 	
+                        </lightning:select>
+                        
+                    </th>
+                    <th scope="col" class="slds-size_1-of-4">
+                        <lightning:select name="selectProperty" label="Property" onchange="{!c.onchangeValue}" aura:id="myProperty" >
+                            <option value="--Select--" text="--Select--" selected = "true"/>
+                            <aura:iteration items="{!v.propertylst}" var="prop">
+                                <option value="{!prop}" text="{!prop}"/>
+                            </aura:iteration>                          	
+                        </lightning:select>
+                    </th>                        
+                    <th scope="col" class="slds-size_1-of-4">
+                        <lightning:select name="selectIdNumber" label="Case Number" onchange="{!c.sortByCaseNumber}" aura:id="myCaseNumber" >
+                            <option value="--Select--" text="--Select--" selected = "true"/>
+                            <option value="Ascending" text="Ascending" />
+                            <option value="Descending" text="Descending" />                                 	
+                        </lightning:select>
+                    </th>                        
+                </tr>
+            </thead>
+            <tbody>
+               <aura:if isTrue="{!v.filteredCaseslst.length > 0}">
+                    <aura:iteration items="{!v.filteredCaseslst}" var="case">
+                        <tr>
+                            <td data-label="RequestType">
+                                <div class="slds-size_1-of-4" title="{!case.RecordType.Name}">{!case.RecordType.Name}</div>
+                            </td>
+                            <td data-label="Status">
+                                <div class="slds-size_1-of-4" title="{!case.Status}">{!case.Status}</div>
+                            </td> 
+                            <td data-label="PropertyName">
+                                <div class="slds-size_1-of-4" title="{!case.Property__r.Name}">{!case.Property__r.Name}</div>
+                            </td>           
+                            <td data-label="CaseNumber">                            
+                                <div class="slds-size_1-of-4" title="{!case.CaseNumber}"><a href="javascript:void(0)" data-id="{!case.Id}" onclick="{!c.redirectTosObj}">{!case.CaseNumber}</a></div>
+                            </td> 
+                        </tr>
+                    </aura:iteration>
+               </aura:if>
+               <aura:if isTrue="{!v.filteredCaseslst.length == 0}">No Records to Display</aura:if>
+            </tbody>
+        </table>
+        
+    </div>
+</aura:component>

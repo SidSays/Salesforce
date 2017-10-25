@@ -1,0 +1,9 @@
+Your case has been submitted successfully. A member of your support team will be following up shortly. 
+
+Channel: {!Case.Channel__c} 
+Product Type: {!Case.Request_Type__c}
+Ticket Category I: {!Case.Ticket_Category__c} 
+Ticket Category II: {!Case.Ticket_Category_II__c} 
+Description: {!Case.Description}
+
+(Please do not remove the reference id from the email subject so that support specialist gets notified)

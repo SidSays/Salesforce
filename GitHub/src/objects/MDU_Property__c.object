@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+	<fields>
+        <fullName>Modules__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>To have multiple properties with single module.</description>
+        <externalId>false</externalId>
+        <label>Module</label>
+        <referenceTo>Module__c</referenceTo>
+        <relationshipLabel>Properties</relationshipLabel>
+        <relationshipName>Properties</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+	<fields>
+        <fullName>Property_Rank_Status__c</fullName>
+        <description>Added as part of US1158902 - XC - Property Ranking Fields</description>
+        <externalId>false</externalId>
+        <label>Property Rank Status</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Grow</fullName>
+                    <default>false</default>
+                    <label>Grow</label>
+                </value>
+                <value>
+                    <fullName>Grow and Retain</fullName>
+                    <default>false</default>
+                    <label>Grow and Retain</label>
+                </value>
+                <value>
+                    <fullName>Retain</fullName>
+                    <default>false</default>
+                    <label>Retain</label>
+                </value>
+                <value>
+                    <fullName>Do not focus</fullName>
+                    <default>false</default>
+                    <label>Do not focus</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+	<recordTypes>
+        <fullName>Xfinity_Property_Record_Type</fullName>
+        <active>true</active>
+        <label>Xfinity Property Record Type</label>
+		<picklistValues>
+            <picklist>Property_Rank_Status__c</picklist>
+            <values>
+                <fullName>Do not focus</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Grow</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Grow and Retain</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Retain</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+	</recordTypes>
+</CustomObject>
