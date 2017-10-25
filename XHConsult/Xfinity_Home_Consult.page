@@ -1,0 +1,115 @@
+<apex:page controller="XHConsult" title="Xfinity Home Consult" showHeader="false" sidebar="false" cache="false" lightningStyleSheets="true">
+    <apex:slds />
+    <!-- If Authentication is unsuccessful then display the error message --> 
+    	<div id="pageMessage" class="slds-align_absolute-center" style="width:100%;padding-top:20px;">
+   		 <p> <apex:outputText rendered="{!!validRequest}"> Authentication Failed : Please use the Single Sign On portal to login. </apex:outputText>
+    		<br/> <apex:pageMessages rendered="{!!validRequest}"/></p></div>
+    <!-- If Authentication is successful then display the form --> 
+    <div id="theform" class="slds-align_absolute-center" >
+        <apex:form style="width:50%" id="SearchForm" rendered="{!validRequest}">
+            <apex:image value="{!$Resource.XfinityHomeSA1}" styleclass="slds-align_absolute-center" />
+            <br/>
+            <!-- Search option  -->
+            <div class="slds-box">
+                <p class="slds-align_absolute-center">We just need a little bit of information to confirm your availability below.
+                    <br/> Note : Enter most accurate and detailed Billing Account Number / Full Address with Apartment Number.
+                    <br/>
+                    <br/> Search By :</p>
+                <div id="radio" class="slds-text-heading_small slds-p-around_small">
+                    <apex:selectRadio id="radioSelection" value="{!selectRadio}" required="true">
+                        <apex:selectOption itemLabel="Billing Account Number" itemvalue="bansrc" />
+                        <apex:selectOption itemLabel="Address" itemvalue="addrsrc" />
+                    </apex:selectRadio>
+                </div>
+                <!-- Take User input in a text box and perform search function from the controller -->
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="inputTextbox"></label>
+                    <div id="inputbox1" class="slds-grid slds-wrap slds-grid_pull-padded slds-align_absolute-center">
+                        <apex:inputText id="inputTextbox" required="true" value="{!inputTextbox}" styleClass="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_5-of-6 slds-large-size_8-of-12" /> &nbsp;&nbsp;&nbsp;
+                        <!-- On click of the button, first call the controller search function -->
+                        <apex:commandButton id="searchBtn" action="{!search}" value="Search" status="searchStatus" styleclass="slds-button slds-button--brand slds-not-selected slds-align_absolute-center" />
+                        <!-- Show a loading animation if the time is more, for pleasant user experience -->
+                        <apex:actionStatus id="searchStatus">
+                            <apex:facet name="start">&nbsp;&nbsp;&nbsp;<img src="{!$Resource.Loading}" /> Searching for Address Serviceability, please wait...</apex:facet>
+                        </apex:actionStatus>
+                        <br/>
+                    </div>
+                </div>
+                <!-- Render the page message based on various conditions -->
+                <div id="pageMessage" style="width:100%;padding-top:20px;">
+                    <p>
+                        <apex:pageMessages />
+                    </p>
+                </div>
+                <!-- Render the Found address to the CSR to validate with customer   -->
+            </div>
+            <apex:outputText value="{!returnResponse}" style="padding: 0.5rem; background: rgb(22, 50, 92);" styleclass="slds-box slds-align_absolute-center slds-text-color_inverse" />
+        </apex:form>
+    </div>
+
+    <!-- Create Output -->
+    <div id="outputpanel" class="slds-align_absolute-center">
+        <apex:outputPanel >
+            <div id="newUserForm" style="width:100%" class="slds-text-align_left slds-p-around_small">
+                <apex:form id="userInputForm" style="width:100%" rendered="{!enableForm && !submitSuccess}">
+                    <apex:pageBlock >
+                        <apex:pageBlockButtons location="bottom" rendered="{!enableForm && !submitSuccess}">
+                            <apex:commandButton action="{!Submit}" value="Submit" rendered="{!enableForm && !submitSuccess}" styleclass="slds-button slds-button--brand slds-not-selected" />
+                        </apex:pageBlockButtons>
+                        <apex:pageBlockSection title="New Customer Form for Xfinity Home Service Installation" columns="1" id="pbs" collapsible="false" rendered="{!enableForm}">
+                            <apex:pageBlockSectionItem >
+                                    <apex:outputLabel title="First Name" value="First Name :" id="ATT1" for="AT1"/>
+                                    <apex:inputField value="{!newXHC.First_Name__c}" id="AT1" rendered="{!enableForm  && !submitSuccess}" required="true" style="width:40%" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Last Name :" value="Last Name :" id="ATT2" for="AT2"/>
+                                <apex:inputField value="{!newXHC.Last_Name__c}" Id="AT2" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Primary phone :" value="Primary phone :" id="ATT3" for="AT3"/>                            
+                                <apex:inputField value="{!newXHC.Primary_phone__c}" ID="AT3" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%" />
+                                </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Best time to call :" value="Best time to call :" id="ATT4" for="AT4"/>
+                                <apex:inputField value="{!newXHC.Best_time_to_call__c}" Id="AT4" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Email :" value="Email :" id="ATT5" for="AT5"/>                            
+                                <apex:inputField value="{!newXHC.Email__c}" Id="AT5" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Packages :" value="Packages :" id="ATT6" for="AT6"/>  
+                                <apex:inputField value="{!newXHC.Packages__c}" Id="AT6" rendered="{!enableForm && !submitSuccess}" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Consult Date :" value="Consult Date :" id="ATT7" for="AT7"/>                            
+                                <apex:inputField value="{!newXHC.Consult_Date__c}" Id="AT7" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%" />
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Consult Time :" value="Consult Time :" id="ATT8" for="AT8"/>                            
+                                <apex:inputField value="{!newXHC.Consult_Time__c}" id="AT8" rendered="{!enableForm && !submitSuccess}" required="true" style="width:40%"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel title="Notes :" value="Notes :" id="ATT9" for="AT9"/>                            
+                                <apex:inputField value="{!newXHC.Notes__c}" Id="AT9" rendered="{!enableForm && !submitSuccess}" style="width:85%"/>
+                            </apex:pageBlockSectionItem>                            <!-- Section renders only if BAN is selected -->
+                            <apex:outputText value="{!cAdd[0].Active_Inactive__c}" label="Customer Status:" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!cAdd[0].Name}" label="Street Line 1:" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!cAdd[0].Address_2__c}" label="Street Line 2 :" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!cAdd[0].City__c}" label="City :" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!cAdd[0].State__c}" label="State :" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!cAdd[0].PostalCode__c}" label="Zip :" rendered="{!enableForm && !!banFlag && !addFlag && !submitSuccess}" html-disabled="true" />
+                            <!-- Section renders only if Address is selected -->
+                            <apex:outputText value="{!AddressList[0].Active_Inactive__c}" label="Customer Status:" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!AddressList[0].Name}" label="Street Line 1:" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!AddressList[0].Address_2__c}" label="Street Line 2 :" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!AddressList[0].City__c}" label="City :" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!AddressList[0].State__c}" label="State :" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                            <apex:outputText value="{!AddressList[0].PostalCode__c}" label="Zip :" rendered="{!enableForm && !!addFlag && !banFlag && !submitSuccess}" html-disabled="true" />
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+        </apex:outputPanel>
+    </div>
+</apex:page>
