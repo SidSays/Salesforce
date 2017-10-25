@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+        <members>CaseTriggerController</members>
+        <members>AddressTriggerController</members>
+    	<members>MDU_UserServices</members>
+    	<members>UserTriggerController</members>
+    	<members>UserTriggerOperation</members>
+    	<members>CustomIterableForPagination</members>
+    	<members>ModuleToPropertyCARAssignment</members>
+    	<members>ModuleToPropertyCARUnAssign</members>
+    	<members>ModuleToPropertyCARAssignmentTest</members>
+    	<members>ModuleToPropertyCARUnAssignTest</members>
+    	<members>SobjectInner</members>
+    	<members>SSOUtility</members>
+    	<members>XHConsult</members>    	
+    	<members>CommunityManageRequestsController</members>
+    	<members>CommunityManageRequestsControllerTest</members>
+    	<members>CaseTriggerControllerTest</members>
+    	<members>SSOUtilityTest</members>
+    	<members>XHConsultTest</members>
+    	<members>AddressTriggerControllerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>CommunityManageRequests</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>CaseTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+<!--     <types>
+        <members>propertyprofessionalsportalNew</members>
+        <name>Network</name>
+    </types> -->
+    <types>
+        <members>XfinityHomeSA1</members>
+        <members>Loading</members>
+        <name>StaticResource</name>
+    </types>
+    <types>
+		<members>Error_Message.XH_addrsrc</members>
+		<members>Error_Message.XH_alreadyInstalled</members>
+		<members>Error_Message.XH_bansrc</members>
+		<members>Error_Message.XH_catchException</members>
+		<members>Error_Message.XH_moreThanOne</members>
+		<members>Error_Message.XH_noAddressFound</members>
+		<members>Error_Message.XH_outputMsg</members>
+		<members>Error_Message.XH_searchTerm</members>
+		<members>Error_Message.XH_serviceable</members>
+	    <name>CustomMetadata</name>
+  	</types>    
+    <types>
+        <members>IndirectStoreActivityDetails</members>
+        <members>CreateOneOneCoaching</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>MDUPropertyPage</members>
+        <members>UniversalSubmitCase</members>
+        <members>ModuleToPropertyCARAssignment</members>
+        <members>ModuleToPropertyCARUnAssign</members>
+        <members>Xfinity_Home_Consult</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>Risk_Assessment_Disposition__c.Disposition_Approver__c</members>
+        <members>Risk_Assessment_Disposition__c.Disposition_Comments__c</members>
+        <members>Risk_Assessment_Disposition__c.Disposition__c</members>
+        <members>Risk_Assessment_Disposition__c.Fiscal_Month_End__c</members>
+        <members>Risk_Assessment_Disposition__c.Risk_Assessment_Analyst__c</members>
+        <members>Risk_Assessment_Disposition__c.Risk_Assessment_Comments__c</members>
+        <members>Risk_Assessment_Disposition__c.Sales_Rep_PERNR__c</members>
+        <members>Risk_Assessment_Disposition__c.Sales_Rep_Text__c</members>
+        <members>Risk_Assessment_Disposition__c.Status__c</members>
+      	<members>MDU_Property__c.Modules__c</members>
+        <members>MDU_Property__c.Property_Rank_Status__c</members>
+        <members>Module__c.Assigned_CAR__c</members>
+        <members>Module__c.Division__c</members>
+        <members>Module__c.Module_Description__c</members>
+        <members>Module__c.Region__c</members>
+        <members>Opportunity_Property__c.Delete_Contract__c</members>
+		<members>Case.How_to_make_best_use_of_CAR_on_site__c</members>
+		<members>Case.End_Time__c</members>
+		<members>Case.Other_reason_for_visit__c</members>
+		<members>Case.Reason_for_Visit__c</members>
+		<members>Case.Start_Time__c</members>
+		<members>Case.Visit_Date__c</members>
+		<members>Case.How_can_the_CAR_get_involved__c</members>
+		<members>Case.Move_in_Date__c</members>
+		<members>Case.Number_of_Units__c</members>
+		<members>Case.Number_of_Residents__c</members>
+		<members>Case.Request_giveaways__c</members>
+		<members>Case.Desired_appointment_times__c</members>
+		<members>Case.Detailed_description_issue__c</members>
+		<members>Case.Impacting_issue__c</members>
+		<members>Case.Location_details__c</members>
+		<members>Case.Special_Instructions__c</members>
+		<members>Case.Xfinity_Materials__c</members>
+		<members>Case.Request_Items__c</members>
+		<members>Case.Detailed_Description_of_Request_s__c</members>
+		<members>Case.Community_Handbooks__c</members>
+		<members>Case.Event_Date__c</members>
+		<members>Case.Event_name_or_type__c</members>
+		<members>Case.Property_Name_Text__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Risk_Assessment_Disposition__c-Risk Assessment Disposition Layout</members>
+        <members>Module__c-Module Layout</members>
+        <members>Module__c-XC User Layout</members>
+        <members>Xfinity_Home_Consult__c-Xfinity Home Consult Layout</members>
+        <members>Case-Request Xfinity Material</members>
+        <members>Case-XCP Multiple Move In Request</members>
+        <members>Case-XCP Property Service Issue</members>
+        <members>Case-XCP Request CAR for Visit</members>
+        <members>Case-XCP Request Event Support</members>
+        <name>Layout</name>
+    </types>    
+     <types>       
+        <members>Module__c</members>
+        <members>Xfinity_Home_Consult__c</members>
+        <name>CustomObject</name>
+    </types>
+  <!--  <types>
+        <members>Universal_Web_to_Case_Flow-13</members>
+        <name>Flow</name>
+    </types>-->
+    <types>
+        <members>Module__c</members>
+       <members>Xfinity_Home_Consult__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+		<members>MDU_Property__c.Xfinity_Property_Record_Type</members>
+		<members>Case.Request_XFINITY_Materials_for_Residents</members>
+		<members>Case.Request_a_Community_Account_Representative_Visit</members>
+		<members>Case.Request_Support_for_Multiple_Move_Ins</members>
+		<members>Case.Report_Property_Service_Issue</members>
+		<members>Case.Request_Event_Support</members>
+		<members>Case.Provide_Feedback</members>
+        <name>RecordType</name>
+    </types> 
+     <types>
+        <members>XH_Consult</members>
+        <name>CustomSite</name> 
+    </types> 
+    <types>
+        <members>Admin</members>
+        <members>Regional System Admin %28RSA%29</members>       
+        <members>XC Event Specialist</members>       
+        <members>XC Manager</members>      
+        <members>Xfinity CAR Manager</members>
+        <members>Xfinity CAR</members>
+        <members>XC Property Professional User</members>
+        <name>Profile</name>
+    </types>
+    <types>
+    	<members>Cases_Email_Templates/New_Case_For_Universal_Web_to_Case</members>
+        <members>Cases_Email_Templates/New_Case_For_Universal_Web_to_Case_for_Retail_Store_and_Wave_only_user_cases</members>
+        <members>Cases_Email_Templates/XCP_Multiple_Move_In_Template</members>
+        <members>Cases_Email_Templates/XCP_Property_Service_Issue_Template</members>
+        <members>Cases_Email_Templates/XCP_Provide_Feedback_Template</members>
+        <members>Cases_Email_Templates/XCP_Refer_Resident_for_Call_Template</members>
+        <members>Cases_Email_Templates/XCP_Request_CAR_Visit_Template</members>
+        <members>Cases_Email_Templates/XCP_Request_Event_Support_Template</members>
+        <members>Cases_Email_Templates/XCP_Request_Xfinity_Materials_Template</members>
+    	<name>EmailTemplate</name>
+    </types>
+    <types>
+        <members>Case.Send_e_mail_Preferred_Email</members>
+        <members>Case.Send_e_mail_Preferred_Email_for_Retail_store_and_wave_only_cases</members>
+        <members>Case.XCP_Multiple_Move_In_Notification</members>
+        <members>Case.XCP_Property_Service_Issue_Notification</members>
+        <members>Case.XCP_Provide_Feedback_Notification</members>
+        <members>Case.XCP_Refer_for_Sales_Call_Notification</members>
+        <members>Case.XCP_Request_CAR_Visit_Notification</members>
+        <members>Case.XCP_Request_Event_Support_Notification</members>
+        <members>Case.XCP_Xfinity_Materials_Notification</members>
+        <name>WorkflowAlert</name>
+    </types>
+    <types>
+        <members>Case.Universal_Case_Set_Case_Origin</members>
+        <name>WorkflowFieldUpdate</name>
+    </types>
+    <types>
+        <members>Case.Case-Set Case Origin to Web</members>
+        <members>Case.Universal Case-Set Case Origin to Web Form</members>
+        <name>WorkflowRule</name>
+    </types>
+    <types>
+    	<members>UserTrigger</members>
+		<name>ApexTrigger</name>
+    </types>
+    <types> 
+        <members>PROFILES_FOR_MCAT_AUTO_CREATE</members>
+        <members>XCP_Portal_Record_Type_Names</members>
+        <members>ByPassDynamicAddition</members>
+        <members>ByPassDynamicTurf</members>
+        <members>SharedDataUserId</members>
+      <name>CustomLabel</name>
+    </types>
+    <types>
+ 		<members>Case.Region_is_required</members>
+ 		<members>Case.Visit_Name_cannot_be_in_past</members>
+ 		<members>Case.No_of_units_should_be_less_than_100</members>
+ 		<members>Case.No_of_residents_should_be_less_than_1000</members>
+ 		<members>Case.Move_In_Date_cannot_be_in_past</members>
+ 		<members>Case.Event_Date_cannot_be_in_the_past</members>
+        <name>ValidationRule</name>
+    </types>    
+<version>38.0</version>
+</Package>
