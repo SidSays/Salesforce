@@ -1,0 +1,129 @@
+<aura:component >
+    <aura:attribute name="filteredAddresses" type="Customer_Address__c[]"/>
+    <aura:attribute name="VoiceOn" type="String"/>
+    <aura:attribute name="VoiceOff" type="String"/>
+    <aura:attribute name="VideoOn" type="String"/>
+    <aura:attribute name="VideoOff" type="String"/>
+    <aura:attribute name="XHOn" type="String"/>
+    <aura:attribute name="XHOff" type="String"/>
+    <aura:attribute name="HSIOn" type="String"/>
+    <aura:attribute name="HSIOff" type="String"/>
+    <aura:attribute name="Targeted" type="String"/>
+    <aura:attribute name="TapStatusHot" type="String"/>
+    <aura:attribute name="TapStatusCold" type="String"/>
+    <aura:handler event="c:SendFilteredAndOriginalAddressList" action="{!c.addressesLoaded}"/>   
+    <ltng:require scripts="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" />
+
+    <ui:scrollerWrapper class="scrollerSize">
+        <div aura:id = "main" id="mainDiv">
+            <aura:if isTrue="{!v.filteredAddresses.length > 0}" >
+                <aura:iteration items="{!v.filteredAddresses}" var="addr" indexVar="idx">
+                    <div onclick="{!c.zoomOnAddress}" data-record="{!idx}"> 
+                    <lightning:card variant="base" class="abc">   
+                            <aura:set attribute="title">
+                                <aura:if isTrue="{!addr.Dwelling_Type__c=='Commercial' || 
+                                                 addr.Dwelling_Type__c=='Multiple Dwelling Unit' ||
+                                                 addr.Dwelling_Type__c=='Bulk Billed MDU' || 
+                                                 addr.Dwelling_Type__c=='Non Bulk Billed MDU' ||
+                                                 addr.Dwelling_Type__c=='Bulk Billed Master' ||
+                                                 addr.Dwelling_Type__c=='MDU'}" >
+                                    <p class="font-reduced">MDU</p>
+                                    <aura:set attribute="else">
+                                        <p class="font-reduced">SFU</p>
+                                    </aura:set>
+                                </aura:if>                                                    
+                            </aura:set>
+                            <aura:set attribute="footer">
+                                <div class="slds-grid slds-wrap slds-grid_pull-padded">    
+                                    <div class="slds-size_3-of-12 ">
+                                        <p class="slds-p-horizontal--small font-reduced2 ">
+                                            <p class="slds-float--left">Disconnect:</p>
+                                            <aura:if isTrue="{!addr.Last_Disconnected_Date__c != undefined}">
+                                                <p class="font-reduced2 slds-float--left">
+                                                    <strong>{!addr.Last_Disconnected_Date__c}</strong>
+                                                </p>
+                                                <aura:set attribute="else">
+                                                    <p class=" font-reduced2 slds-float--left">
+                                                        <strong>N/A</strong>
+                                                    </p>                                                
+                                                </aura:set>
+                                            </aura:if>
+                                        </p>
+                                    </div> 
+                                    
+                                    <div class="slds-size_9-of-12 slds-no-flex">
+                                        <aura:if isTrue="{!addr.Video_Active1__c}">
+                                            <img src="{!v.VideoOn}" alt="VideoOn" height="20" width="20"/> &nbsp;
+                                            <aura:set attribute="else">
+                                                <img src="{!v.VideoOff}" alt="VideoOff" height="20" width="20"/> &nbsp;
+                                            </aura:set>
+                                        </aura:if> 
+                                        <aura:if isTrue="{!addr.HSI_Active1__c}">
+                                            <img src="{!v.HSIOn}" alt="HSIOn" height="20" width="20"/> &nbsp;
+                                            <aura:set attribute="else">
+                                                <img src="{!v.HSIOff}" alt="HSIOff" height="20" width="20"/> &nbsp;
+                                            </aura:set>
+                                        </aura:if> 
+                                        <aura:if isTrue="{!addr.Voice_Active1__c}">
+                                            <img src="{!v.VoiceOn}" alt="VoiceOn" height="20" width="20"/> &nbsp;
+                                            <aura:set attribute="else">
+                                                <img src="{!v.VoiceOff}" alt="VoiceOff" height="20" width="20"/> &nbsp;
+                                            </aura:set>
+                                        </aura:if>   
+                                        <aura:if isTrue="{!addr.XH_Active1__c}">
+                                            <img src="{!v.XHOn}" alt="XHOn" height="20" width="20"/> &nbsp;
+                                            <aura:set attribute="else">
+                                                <img src="{!v.XHOff}" alt="XHOff" height="20" width="20"/> &nbsp;
+                                            </aura:set>
+                                        </aura:if>
+                                        <aura:if isTrue="{!addr.Targeted__c || 
+                                                         ((addr.HSI_Only__c=='YES') &amp;&amp; 
+                                                         (addr.Comcast_Division__c=='Northeast' || addr.Comcast_Division__c=='Central'))}">
+                                            <img src="{!v.Targeted}" alt="Targeted" height="16" width="16"/> &nbsp;
+                                        </aura:if>
+                                    </div>
+                                </div>
+                                
+                            </aura:set>
+                            <aura:set attribute="actions">
+                                <span class="font-reduced">{!addr.Active_Inactive__c} &nbsp;
+                                    
+                                    <aura:if isTrue="{!addr.FormulaTapStatus__c=='HOT'}">
+                                        <img src="{!v.TapStatusHot}"/> &nbsp;
+                                        <aura:set attribute="else">
+                                            <img src="{!v.TapStatusCold}"/> &nbsp;
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                </span>
+                            </aura:set>                        	
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.Name}</p> 
+                        	<!--Added Address 2 - Animesh - 09/18/2017 - US1156838 -->
+                        	<p class="slds-p-horizontal--small font-reduced">
+                                {!addr.Address_2__c}</p>
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.City__c},{!addr.State__c},{!addr.PostalCode__c}
+                            </p>
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.Customer_Name__c}                                
+                            </p>
+                        </lightning:card>
+                   </div> 
+                </aura:iteration>
+            </aura:if>
+        </div>
+     </ui:scrollerWrapper>
+    <!--<div class="addresCountfooter">{!v.filteredAddresses.length} Addresses</div>-->
+    <div class="addresCountfooter">{!v.filteredAddresses.length}
+        <!-- Start - US1156662  -->
+        <aura:if isTrue="{!v.filteredAddresses.length ==1}">
+            Address
+            <aura:set attribute="else">
+                Addresses
+            </aura:set>
+        </aura:if> 
+        <!-- End US1156662  -->
+    </div>
+
+</aura:component>

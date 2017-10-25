@@ -1,0 +1,12 @@
+<aura:component access="global" >	
+    <aura:registerevent type="c:CoachAnalyticsCollapsibleEvent" name="toggleClick"/>
+    
+    <div aura:id="mainDiv" class="slds-split-view_container slds-is-closed slds-border_left ca-button-height">
+        <lightning:buttonIcon aura:id="arrowButton" class="slds-split-view__toggle-button slds-is-closed ca-button-height" 
+                              iconName="utility:chevronright" size="x-small" alternativeText="Expand" 
+                              onclick="{!c.toggleParent }"/>
+        <div id="split-view-id" class="slds-split-view slds-grid slds-grid_vertical slds-grow" >
+            <c:CoachingComponent />
+        </div>
+    </div>     
+</aura:component>

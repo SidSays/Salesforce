@@ -1,0 +1,25 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes" 
+                access="global"
+                controller="PlanAddressController">    
+    <aura:attribute type="string" name="pageRecordId" />
+    <aura:attribute type="string" name="currentPlanName" />
+    <aura:attribute type="Customer_Address__c[]" name="addresses" />
+    <aura:attribute type="Plan__c[]" name="AssignedPlans" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <div class="dim">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+            <div class="slds-p-horizontal--xx-small slds-size--1-of-1">
+                <c:HeaderPane planId="{!v.pageRecordId}" />
+            </div>
+        </div>
+    	<div class="slds-grid slds-wrap slds-grid--pull-padded">
+            <div class="slds-p-horizontal--xx-small slds-medium-size--4-of-12 "> 
+                <c:PlanInfo currentPlanName="{!v.currentPlanName}"/>
+                <c:AddressPane />                 
+            </div>
+            <div class="slds-p-horizontal--xx-small  slds-medium-size--8-of-12">
+                <c:MapAnything />
+            </div> 
+    	</div> 
+    </div>
+</aura:component>

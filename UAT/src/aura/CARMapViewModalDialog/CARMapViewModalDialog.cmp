@@ -1,0 +1,75 @@
+<!--CARMapViewModalDialog-->
+<aura:component controller="CarMapViewController" implements="force:appHostable">
+    <ltng:require styles="/resource/SLDS100/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:attribute name="dynamic" type="String" default="slds-show"/>
+	<aura:attribute name="modalValue" type="String" default="slds-modal slds-fade-in-open"/>
+    <aura:attribute name="closeLabel" type="String" default="Close"/>
+    <aura:attribute name="selectedCAR" type="String" />
+    <aura:attribute name="selectedType" type="String" />
+     <aura:attribute name="title" type="String" />
+    <aura:attribute name="confirmBox" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="onclose" type="Aura.Action" default="{!c.defaultCloseAction}"/>
+    <aura:if isTrue="{!v.dynamic != 'slds-hide'}">
+    <div class="slds">
+    <div class="slds-m-top--x-small">
+     <div aria-hidden="{!v.hiddenValue}" role="dialog" class="{!v.modalValue}">
+     <div class="slds-modal__container">
+      <div class="slds-modal__header">
+		<h2 class="slds-text-heading--medium">{!v.title}</h2>
+            <aura:if isTrue="{!v.closable}">
+			  <button class="slds-button slds-modal__close" onclick="{!v.onclose}">
+						<c:svgIcon svgPath="/resource/SLDS100/assets/icons/action-sprite/svg/symbols.svg#close" 
+                                               category="standard" 
+                                               size="small" 
+                                               name="close" />
+                                    
+                       <span class="slds-assistive-text">{!v.closeLabel}</span>
+               </button>
+            </aura:if>
+       </div>
+         
+       <div class="slds-modal__content">
+           <ui:message aura:id="messagebox" title="Error" class="slds-hide" severity="error" 
+                    	closable="false">
+               <ui:outputText value=""/>
+        	</ui:message>
+           <table class="slds-table slds-table--bordered">
+               <tr>
+                   <td><ui:inputSelect label="Select CAR" aura:id="CARList" change="{!c.onSelectChange}"/></td>
+               </tr>
+               <tr>
+                   <td><ui:inputSelect label="View Type" aura:id="viewType" change="{!c.onSelectChange}"/></td>
+               </tr>
+               <aura:if isTrue="{!v.selectedType=='CAR Activity locations'}">
+                   <tr>
+                     <td><ui:inputDateTime aura:id="fromDate" label="From Date" class="form-control"
+                                   displayDatePicker="true" required="true" /></td>
+                   </tr>
+                   <tr>
+                     <td><ui:inputDateTime aura:id="toDate" label="To Date" class="form-control"
+                                   displayDatePicker="true" required="true" /></td>
+                   </tr>
+               </aura:if>
+               <aura:if isTrue="{!v.selectedType=='Daily location history'}">
+                   <tr>
+                     <td><ui:inputDateTime aura:id="fromDate" label="From Date" class="form-control"
+                                   displayDatePicker="true" required="true" /></td>
+                   </tr>
+               </aura:if>
+           </table>
+       </div>
+         
+       <div class="slds-modal__footer"> 
+         <div>
+            <button class="slds-button slds-button--neutral slds-button--brand" onclick="{!c.showDetails}">Show Details</button>
+         </div>  
+       </div>
+     </div>
+     </div>
+		<div class="slds-modal-backdrop slds-modal-backdrop--open"></div>         
+    </div>        
+    </div>
+    </aura:if>
+</aura:component>

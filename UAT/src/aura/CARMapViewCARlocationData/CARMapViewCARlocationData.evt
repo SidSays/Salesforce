@@ -1,0 +1,4 @@
+<!--CARMapViewCARlocationData-->
+<aura:event type="APPLICATION" description="Event template">
+    <aura:attribute name="propertyData" type="Object"/>
+</aura:event>

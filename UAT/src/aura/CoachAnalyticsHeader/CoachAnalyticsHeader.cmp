@@ -1,0 +1,16 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="TilesController">
+	
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:attribute name="profileName" type="String" />
+    
+    <div class="slds-page-header slds-align_absolute-center">
+        <div class="slds-media ">
+            <div class="slds-media__figure ">
+                <lightning:icon iconName="standard:opportunity" size="medium" alternativeText="Retail Sales"/>                        
+            </div>
+            <div class="slds-media__body">
+                <h4 style="font-size:16px;">{!v.profileName}</h4>
+            </div>
+        </div>
+    </div>
+</aura:component>

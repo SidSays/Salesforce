@@ -1,0 +1,20 @@
+.THIS {
+}
+
+.THIS tbody {
+    counter-reset: section;
+}
+
+.THIS .prop {
+    counter-reset: subsection;
+}
+
+.THIS h2:before {
+    counter-increment: section;
+    content:  counter(section);
+}
+
+.THIS h3:before {
+    counter-increment: subsection;
+    content: counter(section) "." counter(subsection) " ";
+}

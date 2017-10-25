@@ -1,0 +1,17 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global" controller="CoachingApp">
+	
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:handler name="toggleClick" event="c:CoachAnalyticsCollapsibleEvent" action="{!c.dashboardToggle}" />
+    <aura:attribute access="global" name="channelName" type="String" default="Retail" description="Channel Name"/>
+
+    <div class="slds-grid slds-grid_vertical-stretch">
+  		<div aura:id="dashboardDiv" class="slds-align_absolute-center slds-col slds-size--12-of-12 slds-small-size--12-of-12 slds-medium-size--12-of-12 slds-large-size--12-of-12 "></div>
+  		<div aura:id="coachDiv" class="slds-col" >
+        	<c:CoachAnalyticsCollapsible />
+        </div>
+	</div>  
+    
+    <div class="ca-rotate">
+        <c:CoachAnalyticsPortraitErrorMessage />
+    </div>
+</aura:component>

@@ -1,0 +1,62 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" controller="SalesSpaceCoreService">
+   <aura:attribute access="public" name="appSectionRecentList" type="Object[]" />
+   <aura:attribute access="public" name="hasRecentApps" type="Boolean" />
+   <aura:attribute access="public" name="appSectionWrapperList" type="Object[]" />
+   <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   <aura:handler event="c:AppLauncherEvent" action="{!c.appLauncherEventHandler}"/>
+   <aura:handler event="c:AppLauncherUpdateRecentEvent" action="{!c.updateRecentItems}"/>
+   <aura:handler event="c:ToggleDashboardEvent" action="{!c.appLauncherEventHandler}"/>
+   <aura:registerEvent name="AppSelectionEvent" type="c:AppSelectionEvent"/>
+   <aura:registerEvent name="toggleCloseEvent" type="c:ToggleCloseEvent"/>
+   <div class="dashboard is-dashboard " aura:id="appLauncherDiv" onclick="{!c.toggleAppLauncher}">
+      <div class="slds-mark"></div>
+      <div class="slds-panel js-preventEvent">
+         <aura:renderIf isTrue="{!v.hasRecentApps}">
+               <section>
+                  <h3>My Recently Used Apps</h3>
+                  <ul class="slds-panel__list">
+                     <div aria-hidden="false" role="dialog" class="">
+                     <!-- See comment in below section
+                     <div aria-hidden="false" role="dialog" class="slds-action-overflow-touch">
+                        <div class="slds-action-overflow-touch__container">
+                           <div class="slds-action-overflow-touch__content">
+                              <div class="slds-action-overflow-touch__body"> -->
+                                 <ul role="menu" class="slds-list--vertical slds-has-block-links--space slds-has-dividers--bottom">
+                                    <aura:iteration items="{!v.appSectionRecentList}" var="appLaucherWrapperObj">
+                                       <c:AppLauncherAppItem appItem="{!appLaucherWrapperObj}"/>
+                                    </aura:iteration>
+                                 </ul>
+                              <!-- </div>
+                           </div>
+                        </div> -->
+                     </div>
+                  </ul>
+               </section>
+         </aura:renderIf>
+         <aura:iteration items="{!v.appSectionWrapperList}" var="appSectionWrapperObj">
+            <section>
+              <h3>{!appSectionWrapperObj.appLabel}</h3>
+               <ul class="slds-panel__list">
+                  <div aria-hidden="false" role="dialog" class="">
+                  <!-- slds overflow-touch appears to be broken in SF1 and mobile
+                   https://www.lightningdesignsystem.com/components/menus/
+                   https://github.com/salesforce-ux/design-system/issues/197
+                  <div aria-hidden="false" role="dialog" class="slds-action-overflow-touch">
+                     <div class="slds-action-overflow-touch__container">
+                        <div class="slds-action-overflow-touch__content">
+                           <div class="slds-action-overflow-touch__body"> -->
+                              <ul role="menu" class="slds-list--vertical slds-has-block-links--space slds-has-dividers--bottom">
+                                 <aura:iteration items="{!appSectionWrapperObj.appLaucherWrapperList}" var="appLaucherWrapperObj">
+                                    <c:AppLauncherAppItem appItem="{!appLaucherWrapperObj}"/>
+                                 </aura:iteration>
+                              </ul>
+                          <!-- </div>
+                        </div>
+                     </div> -->
+                  </div>
+               </ul>
+            </section>
+         </aura:iteration>
+      </div>
+   </div>
+</aura:component>

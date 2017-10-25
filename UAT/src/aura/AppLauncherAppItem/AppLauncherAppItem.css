@@ -1,0 +1,55 @@
+.THIS>a {
+    padding-left :0px !important;
+}
+
+.THIS .slds-truncate {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+  padding: 8px
+}
+
+.THIS .slds-truncate p {
+  padding-left: 48px;
+}	
+
+.THIS > a > img + span {
+  padding-left: 19px;
+}
+
+.THIS > a > img {
+  max-width:39px; 
+  height:auto;
+}
+
+.THIS .slds-truncate p:before {
+  box-shadow: rgba(0,0,0,.4) 0 2px 2px;
+  border: #7EAABE solid 1px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  content: attr(title);
+  display: block;
+  font-size: 12px!important;
+  font-weight: bold;
+  line-height: 37px;
+  height: 39px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  width: 39px;
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #66C2EA, #39A2DE); 
+  /* Safari 4-5, Chrome 1-9 */ 
+  /* -webkit-gradient(,  [, ]?,  [, ]? [, ]*) */
+  background: -webkit-gradient(linear,top,from(#66C2EA),to(#39A2DE));
+  /* Safari 5.1+, Chrome 10+ */
+  background: -webkit-linear-gradient(top, #66C2EA, #39A2DE);
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #66C2EA, #39A2DE);
+}
+
+li.THIS {
+  margin-bottom: 5px;
+}

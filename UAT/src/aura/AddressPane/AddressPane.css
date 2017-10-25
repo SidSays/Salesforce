@@ -1,0 +1,43 @@
+.THIS {
+    position:absolute;
+    top:84px;    
+    height: 93%;
+    width: 33%;
+    padding:22px 0 25px 0;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+}
+
+.THIS .font-reduced{
+    font-size : 0.8em;
+}
+
+.THIS .font-reduced2{
+    font-size : 0.9em;
+}
+
+.THIS .zblueColorClass{
+    z-index:0;
+    background-color: #ADD8E6;
+    }
+
+.THIS .abc.selectedRow{
+  background-color:#41b5f4;
+  color:blue;
+ }
+
+.THIS .zwhitecolorClass{
+    z-index:0;
+   
+}
+
+.THIS.addresCountfooter{
+    position: fixed;
+    bottom: 0;
+    width: 33%;
+    height:30px;
+    background-color: #efefef;
+    text-align:center;
+    padding:5px 0 0 0;
+}

@@ -1,0 +1,71 @@
+<aura:component access="global"
+                controller="CARMapViewLightning">
+    <ltng:require styles="/resource/SLDS100/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:attribute name="properties" type="Object"/>
+    <aura:attribute name="propVisits" type="Object"/>
+   	<aura:attribute name="visitNumber" type="Integer" default="0"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:handler event="c:CARMapViewCARlocationData" action="{!c.showTable}"/> 
+  
+    <div class="slds">  
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-no-row-hover slds-table--fixed-layout">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th width="12%" scope="col" title="Select">
+                        <div class="slds-truncate">SNo.
+                            <div class="slds-checkbox"></div>
+                        </div>    
+                    </th>
+                    
+                    <th width="26%" scope="col" title="Start Date">
+                        <div class="slds-wrap">Start Date</div>
+                    </th> 
+                    <th width="24%" scope="col" title="Start Time">
+                        <div class="slds-truncate">Start Time</div>
+                    </th> 
+                    <th width="24%" scope="col" title="End Time">
+                        <div class="slds-truncate">End Time</div>
+                    </th>
+                    <th width="38%" scope="col" title="Latitude/Longitude">
+                        <div class="slds-truncate">Latitude/Longitude</div>
+                    </th>
+                    <th width="24%" scope="col" title="Time Spent(mm:ss)">
+                        <div class="slds-truncate">Time Spent(mm:ss)</div>
+                    </th>                        
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.properties}" var="prop" indexVar="propIndex">
+                    <tr style="background-color:#16325c" class="prop">
+                        <td style="color:#FFF"><h2></h2></td>
+                        <td style="color:#FFF" colspan="5"><b>Property Name: {!prop.Name}</b></td>
+                    </tr>
+                    <aura:iteration items="{!v.propVisits}" var="propVisit" indexVar="visitIndex">
+                        
+                      <aura:if isTrue="{!propVisit.Property__c == prop.Id}"> 
+                            <tr class="subsection">
+                                
+                                <td><h3></h3></td>
+                                <td>                                    
+                                    <ui:outputDate value="{!(propVisit.CreatedDate)}"
+                                                   format="MM/DD/YYYY"/>
+                                </td>
+                                <td>
+                                    {!propVisit.Start_Date_Time__c}
+                                </td>
+                                <td>{!propVisit.End_Date_Time__c}</td>                                 
+                                <td>{!propVisit.Visit_Location__Latitude__s}/
+                                    {!propVisit.Visit_Location__Longitude__s}</td>                                 
+                                <td>{!propVisit.Time_Spent__c}</td></tr>
+                        </aura:if> 
+                        
+                    </aura:iteration>
+                </aura:iteration>
+            </tbody>
+        </table>
+        
+        <br></br>
+        
+        
+    </div>
+</aura:component>

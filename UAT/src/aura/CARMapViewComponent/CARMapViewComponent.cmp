@@ -1,0 +1,64 @@
+<!-- CARMapViewComponent -->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes" 
+                access="global"
+                controller="CARMapViewLightning">
+    <ltng:require styles="/resource/SLDS100/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:attribute type="string" name="errorMessage" />    
+    <aura:attribute name="user" type="Object"/>
+    <aura:attribute name="viewType" type="String"/>
+    <aura:attribute name="fromDate" type="Date"/>
+    <aura:attribute name="toDate" type="Date"/>
+    <aura:attribute name="profileCheck" type="Boolean"/>
+    <aura:attribute name="CARusers" type="User[]"/>
+
+    <div class="slds-text-align--center slds-text-heading--large">
+        <ui:outputText value="{!v.errorMessage}" />
+    </div>
+    
+    <aura:registerEvent name="CARMapViewEvent" type="c:CARMapViewEvent"/>
+    <aura:handler event="c:CARMapViewSelectedDataEvent" action="{!c.propertyAndPropertVisit}"/> 
+    <!--  <aura:handler event="c:CARMapViewSelectedDataEvent" action="{!c.carMapViewlocation}"/>  -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div aura:id="optionalModalDialog"/> 
+    <aura:if isTrue="{!v.errorMessage == undefined}">
+        <div class="slds" id ="screen">
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--fixed-layout" style="margin-left:-.8%;margin-top:-.8%;">
+                <thead>           
+                    <tr class="slds-text-heading--label">
+                        <th width="20%" scope="col" title="Selected CAR">
+                            <div ><b>Selected CAR: </b> {!v.user}</div>
+                        </th> 
+                        <th width="20%" scope="col" title="View Type">
+                            <div><b>View Type: </b> {!v.viewType}</div>
+                        </th>
+                        <aura:if isTrue="{!v.fromDate}">
+                            <th width="20%" scope="col" title="Date">
+                                <div class="slds-truncate"><b>Date: </b> {!v.fromDate}</div>
+                            </th>
+                        </aura:if>
+                        <aura:if isTrue="{!v.toDate}">
+                            <th width="20%" scope="col" title="To">
+                                <div class="slds-truncate"><b>To </b> {!v.toDate}</div>
+                            </th>
+                        </aura:if>
+                        <th width="20%" scope="col" title="Type">
+                            <div class="slds-truncate">
+                                <lightning:button variant="brand" label="Change Filter" onclick="{! c.changeFilter }" />
+                            </div>
+                        </th>
+                        
+                    </tr>
+                </thead>
+            </table>                         
+          <!--  <aura:if isTrue="{!v.user}"> -->
+                <div id ="CARmap"><c:MapMyStoreAccountMap /></div>        
+            <!--</aura:if> -->
+            <aura:if isTrue="{!v.viewType == 'CAR Activity locations'}">
+                <div id="CARlist">
+                    <c:CARMapViewList />
+                </div> 
+            </aura:if> 
+        </div>
+    </aura:if>
+</aura:component>

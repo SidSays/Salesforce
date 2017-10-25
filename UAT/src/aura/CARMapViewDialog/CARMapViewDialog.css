@@ -1,0 +1,39 @@
+@media only screen and (min-width:48em) {
+    .THIS .slds-modal__container {
+        margin: 0 auto;
+        width: 45%;
+        max-width: 40rem;
+        min-width: 20rem;
+        height: 65%;
+        max-height: 40rem;
+        min-height: 20rem;
+        margin-top: 6%;
+    }
+    
+}
+
+
+.THIS .modalspinner .centered {
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+.THIS .modalspinner {
+    position:absolute;
+    height: 100%;
+    width:100%;
+    z-index: 500;
+    opacity: 0.9;
+    background-color: grey;
+}
+
+.THIS .assistiveText {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px,1px,1px,1px);
+}

@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Event template" access="global">
+    <aura:attribute name="user" type="String"/>
+    <aura:attribute name="viewType" type="String"/>
+    <aura:attribute name="fromDate" type="Date"/>
+    <aura:attribute name="toDate" type="Date"/>
+</aura:event>

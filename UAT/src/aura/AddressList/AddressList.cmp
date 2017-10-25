@@ -1,0 +1,42 @@
+<aura:component controller="PlanAddressController">
+    <aura:attribute name="searchResults" type="Customer_Address__c[]"/>
+    
+    <aura:handler event="c:SearchKeyChange" action="{!c.searchKeyChange}"/>        
+    <div>
+        <aura:if isTrue="{!v.searchResults.length > 0}" >
+            <aura:iteration items="{!v.searchResults}" var="addr" indexVar="idx">
+                <div data-record="{!addr.Id}" onclick="{!c.gotoAddressDetail}">
+                    <lightning:card variant="base">
+                        <aura:set attribute="title">
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.Name}</p>
+                            <!--Added Address 2 - Animesh - 09/18/2017 - US1156838 -->
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.Address_2__c}</p>
+                            <p class="slds-p-horizontal--small font-reduced">
+                                {!addr.City__c},{!addr.State__c},{!addr.PostalCode__c}
+                            </p>                                                
+                        </aura:set>
+                        <aura:set attribute="footer">
+                            <div class="slds-grid slds-wrap slds-grid_pull-padded">    
+                                <div class="slds-size_9-of-12 ">
+                                    <p class="slds-p-horizontal--small font-reduced2 ">
+                                        <p class="slds-float--left">Account#: {!addr.Account__r.Billing_Account_Number__c}</p><br/>
+                                        <p class="slds-float--left">Location ID: {!addr.Location_ID__c}</p>                                                                                          
+                                    </p>
+                                </div> 
+                                <div class="slds-size_3-of-12 slds-no-flex">                                    
+                                </div>
+                            </div>                            
+                        </aura:set>
+                        <aura:set attribute="actions">
+                            <span class="font-reduced">{!addr.Active_Inactive__c}</span>
+                        </aura:set>
+                    </lightning:card>
+                </div>
+            </aura:iteration>
+        </aura:if>
+    </div>
+    
+    
+</aura:component>

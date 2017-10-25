@@ -1,0 +1,129 @@
+<aura:component controller="CARMapViewLightning">
+  
+    
+    <aura:attribute name="subject" type="String"/>
+    
+    
+    <aura:attribute name="relatedTo" type="String" />
+    <aura:attribute name="assignedTo" type="String" />
+    <aura:attribute name="whatId" type="String"/>
+    
+    <aura:attribute name="selectedUser" type="String" />
+    <aura:attribute name="users" type="User[]" /> 
+    <aura:attribute name="selectedValue" type="String" default="Last reported location today"/>
+    <aura:attribute name="options" type="List" />
+    <aura:attribute name="startDateTime" type="String"/>
+    <aura:attribute name="toDate" type="String"/>
+    <aura:attribute name="dailyDate" type="String"/>    
+	<aura:attribute name="warnings" type="String[]" description="Warnings for input text"/>
+    
+    
+    <aura:attribute name="title" type="String" required="true"/>
+    <aura:attribute name="closable" type="Boolean" default="true"/>
+    
+    <aura:attribute name="onclose" type="Aura.Action" default="{!c.defaultCloseAction}"/> 
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="CARMapViewSelectedDataEvent" type="c:CARMapViewSelectedDataEvent"/>
+    <div class="slds">
+        
+        <div>
+            <!-- instead of using display property of css, use aria-hidden from HTML5 -->
+            <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open">
+                
+                <div class="slds-modal__container">
+                    
+                    <div class="slds-modal__header">
+                        <h2 class="slds-text-heading--medium">{!v.title}</h2>
+                         <h1><ui:inputDefaultError aura:id="number" value="{!v.warnings}" /></h1>
+                        <aura:if isTrue="{!v.closable}">
+                            <button class="slds-button slds-modal__close" onclick="{!v.onclose}">
+                                <c:svgIcon svgPath="/resource/SLDS100/assets/icons/action-sprite/svg/symbols.svg#close" 
+                                           category="standard" 
+                                           size="small" 
+                                           name="close" />
+                                
+                                <span class="slds-assistive-text">{!v.closeLabel}</span>
+                            </button>
+                        </aura:if>
+                    </div> 
+                    <div class="slds-modal__content">
+                        <div>
+                            <form>
+                                <form class="slds-form--stacked" style="padding:5px">                                    
+                                    <div class="slds-form-element">
+                                        <div>
+                                            <lightning:select name="selectItem" label="Select CAR:" value="{!v.selectedUser}"
+                                                               onchange="{!c.userChange}">
+                                                <aura:iteration items="{!v.users}" var="user">
+                                                    <option value="{!user.Name+'/'+user.Id}" text="{!user.Name}"></option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element">
+                                        <div>
+                                            <lightning:select name="mySelect" label="View Type:" aura:id="viewType" value="{!v.selectedValue}"
+                                                              onchange="{!c.viewTypeChange}">
+                                                <aura:iteration items="{!v.options}" var="item">
+                                                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                                                </aura:iteration>
+                                            </lightning:select> 
+                                        </div>
+                                    </div>
+                                    <aura:if isTrue="{!v.selectedValue =='CAR Activity locations'}">
+                                        <div class="slds-form-element">
+                                            
+                                            <ui:inputDate label="From Date:"
+                                                          aura:id="startDateTime" 
+                                                          class="slds-form-element__control slds-input" 
+                                                          labelClass="slds-form-element__label"
+                                                          displayDatePicker="true"
+                                                          required="true"
+                                                          value="{!v.startDateTime}"
+                                                          />
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <ui:inputDate label="To Date:"
+                                                          aura:id="toDate" 
+                                                          class="slds-form-element__control slds-input" 
+                                                          labelClass="slds-form-element__label"
+                                                          displayDatePicker="true"
+                                                          required="true"
+                                                          value="{!v.toDate}"/>
+                                            
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.selectedValue =='Daily location history'}">
+                                        <div class="slds-form-element">
+                                            
+                                              <ui:inputDate label="Date:"
+                                                          aura:id="dailyDate" 
+                                                          class="slds-form-element__control slds-input" 
+                                                          labelClass="slds-form-element__label"
+                                                          displayDatePicker="true"
+                                                          required="true"
+                                                          value="{!v.dailyDate}"/> 
+                                        </div> 
+                                    </aura:if> 
+                                    
+                                </form>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer"> 
+                        <div style="text-align: center">
+                            <button aura:id="btnSuchedule"
+                                    type="button"
+                                    class="slds-button slds-button--neutral"                                               
+                                    onclick="{!c.SaveEvent}">
+                                Show Details
+                            </button>
+                        </div> 
+                    </div>
+                </div> 
+            </div>
+            <div class="slds-modal-backdrop slds-modal-backdrop--open"></div>
+        </div>
+    </div>
+</aura:component>
