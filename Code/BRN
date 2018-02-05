@@ -1,0 +1,44 @@
+/*  
+*  @name            populateBRN
+*  @param           Account - Trigger.New
+*  @return          None
+*  @Author			Siddharth Sinha
+*  @Reference		ALM#5082 - KTT5
+*/ 
+    public static void populateBRN(List<Account> accListToUpdateNew) {
+        try {
+            //Identify Account field Changes        
+            List<Account> updateBRNaccs = new List<Account>(); // Added for 5082
+            //Variable to hold the household recordtype id
+            Id recordTypeID = Schema.SObjectType.Account.getRecordTypeInfosByName().get(RECORD_TYPE_NAME_ENTITY_GROUP).getRecordTypeId();
+            system.debug('recordTypeID='+recordTypeID);
+            for(Account acc : accListToUpdateNew){
+                //get the relevant accounts whose record type is Entity Group
+                if(acc.recordtypeId==recordTypeID){	
+                	updateBRNaccs.add(acc); 
+                }
+            }system.debug('pdateBRNaccssize='+updateBRNaccs.size());
+            // Added for 5082 - Populate BRN on account of record type Entity Group
+            //Get the maximum value of currently existing Business Relationship Number on Account.
+    		Account accn = [SELECT Id,Business_Relationship_Number_2__c FROM Account where Business_Relationship_Number_2__c <>NULL ORDER BY Business_Relationship_Number_2__c DESC LIMIT 1];
+    		Integer max = integer.valueOf(accn.Business_Relationship_Number_2__c);
+    		system.debug('max='+max);
+    		if(max<maxBRN || max==NULL){
+    		max=maxBRN; // Since the starting number must be 410000
+    		}
+            //Traverse the loop of these accounts in the List and update the business relationship number
+            if(!updateBRNaccs.isEmpty()){
+    			for(Account acc : updateBRNaccs){
+    				if(string.isBlank(acc.Business_Relationship_Number_nCino__c) && acc.Business_Relationship_Number_2__c==null){
+        				acc.Business_Relationship_Number_2__c=max+1;
+        				acc.Business_Relationship_Number_nCino__c=String.ValueOf(acc.Business_Relationship_Number_2__c);
+        			}
+       			}
+            }
+        } catch(Exception ex) {
+            String expMsg = UtilityHolder.errorMethod(Constants.ACCOUNT_OBJ_NAME,CLASS_NAME,METHOD_NAME_POPULATE_BRN,String.valueOf(ApexPages.severity.FATAL), ex);
+            trigger.new[0].addError(expMsg);
+        }
+        
+    }
+    //end of method - populateBRN
