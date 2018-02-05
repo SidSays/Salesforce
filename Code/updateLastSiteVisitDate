@@ -1,0 +1,32 @@
+/*  
+*  @name            updateLastSiteVisitDate
+*  @param           Requests - Trigger.New
+*  @description     Stamp the account's last site visit date to be the same as the request's site visit date
+*  @Author			Siddharth Sinha
+*  @Reference		US215 - KTT5
+*/ 
+public static void updateLastSiteVisitDate(List<Requests__c> reqIds){
+	//create a set to hold related accounts
+	Set<Id> accountIds = new Set<Id>();
+	//add all the accountIds on this set
+		for(Requests__c req1 : reqIds){
+			if(req1.Entity__c <>null){
+				accountIds.add(req1.Entity__c);
+			}
+		}
+	//Get the recordtype of Portfolio_Review_Memo_Request	
+	Id portrecId = Schema.SObjectType.Requests__c.getRecordTypeInfosByName().get(Portfolio_Review_Memo_Request).getRecordTypeId();	
+	//Creating a Map to store the related Account's Last Site Visit Date	
+	Map<Id, Account> accountMap = new Map<Id, Account>([select Id, LLC_BI__Last_Site_Visit__c from Account where Id in :accountIds]);
+	//Iterate in the trigger new ids and set the last site visit date on the requests to be same as teh account	
+       for(Requests__c req : reqIds){
+       	// check if the record type is Portfolio_Review_Memo_Request only then stamp the date
+       		if(req.recordTypeID==portrecId){
+       			//Get the related account
+       			Account a = accountMap.get(req.Entity__c);
+       			//Stamp the account's last site visit date to be the same as the request's site visit date
+           		req.Last_Site_Visit_Date__c=a.LLC_BI__Last_Site_Visit__c;
+          		}
+       	}	
+}
+//End of method - updateLastSiteVisitDate
