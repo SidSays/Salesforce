@@ -1,0 +1,33 @@
+//Logic- Start of Method - changeLoanNameOnUpdate
+public static void changeLoanNameOnUpdate(List<LLC_BI__Loan__c > triggerIds){
+	for(LLC_BI__Loan__c lnn : triggerIds){
+	    if((lnn.Booking_Type__c == One || lnn.Booking_Type__c == Two || lnn.Booking_Type__c == Three || lnn.Booking_Type__c == Ten || lnn.Booking_Type__c == ACBS|| lnn.Booking_Type__c == LSE) && lnn.LLC_BI__Stage__c == FB && lnn.LLC_BI__Status__c == RB && lnn.LLC_BI__isRenewal__c == false){
+		String accn = String.valueOf(lnn.Entity_Name__c);
+		String prod = String.valueOf(lnn.LLC_BI__Product__c);
+		String cnum = String.valueOf(lnn.Customer_Number__c);
+		String lnum = String.valueOf(lnn.LLC_BI__lookupKey__c);
+		system.debug('NEW LOAN NAME contains = '+accn+'/'+prod+'/'+cnum+'/'+lnum);
+			if(!String.isBlank(accn) && !String.isBlank(prod) && !String.isBlank(cnum) && !String.isBlank(lnum)){
+				// Loan Name = "Entity Name – Product - Customer Number - Loan Number"
+				if((accn.length()+prod.length()+cnum.length()+lnum.length()+nThree)<=Eighty){
+		        		String newName = accn+'-'+prod+'-'+cnum+'-'+lnum;
+		        		//system.debug('MET CRITERIA1'+'newName='+newName);
+		                lnn.Name = newName;
+		        		}
+		        // Loan Name = "Entity Name – Left(Product,20) - Customer Number - Loan Number"
+		        else if((accn.length()+prod.substring(20).length()+cnum.length()+lnum.length()+nThree)<=Eighty){
+		        		//system.debug('MET CRITERIA2');
+		        		String newName = accn+'-'+prod.substring(20)+'-'+cnum+'-'+lnum;
+		                lnn.name = newName;
+		        		}
+		        // Loan Name = "Left(Entity Name,30) – Left(Product,20) - Customer Number - Loan Number"        
+		        else if((accn.substring(30).length()+prod.substring(20).length()+cnum.length()+lnum.length()+nThree)<=Eighty){
+		        		//system.debug('MET CRITERIA3');
+		        		String newName = accn.substring(30)+'-'+prod.substring(20)+'-'+cnum+'-'+lnum;
+		                lnn.name = newName;
+		        		}
+	      }
+	    }  
+	}
+}
+//end of Method - changeLoanNameOnUpdate
