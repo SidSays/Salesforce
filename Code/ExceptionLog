@@ -1,0 +1,111 @@
+/****
+*Class       -----     UtilityHolder
+*Author      -----     Sulabh Kapoor
+*Date        -----     14/12/2011
+*Description -----     This class will hold the utility functions that will be reusable in any
+*                      application across salesforce
+***/
+public class UtilityHolder{
+    // declare the variables
+   static List<Error_Log__c> lstErrorLog = new List<Error_Log__c>();
+   static Error_Log__c objErrorLog;
+    
+    /*
+    * method name - errorMethod
+    * arguments   - String objectName, String className, String methodName, String sSeverity, String sErrorMsg
+    * return type - void
+    * description - This is the generic method that can create ERROR records in the Error Log
+    *               when an error has occurred while making any DML operation.
+    */
+    public static void errorMethod(String objectName, String className, String methodName, String sSeverity, String sErrorMsg){
+        // clear the list
+        lstErrorLog.clear();
+        // ++ if the issue is of type Error
+        if(null != sErrorMsg && sErrorMsg != ''){
+            objErrorLog = new Error_Log__c();
+            // map the values to the field and put that in the list that will be inserted later
+            objErrorLog.Object_Name__c = objectName;
+            objErrorLog.Apex_Class_Trigger__c = className;
+            objErrorLog.Method_Name__c = methodName;
+            objErrorLog.Description__c = sErrorMsg.length()>32768 ? sErrorMsg.substring(4,32768): sErrorMsg;
+            objErrorLog.Severity__c = sSeverity;
+            objErrorLog.type__c = 'Error';
+            lstErrorLog.add(objErrorLog);
+                
+        }
+        // check if the size of lstErrorLog is greater than zero. This will happen
+        // if a record has failed while causing the DML operation.
+        if(null != lstErrorLog && lstErrorLog.size()>0){
+            insert lstErrorLog;
+        }
+    }
+    
+    /*
+    * method name - errorMethod
+    * arguments   - String objectName, String className, String methodName, String sSeverity, Exception e
+    * return type - String sMessage
+    * description - This is the generic method that can create EXCEPTION records in the Error Log
+    *               when an esxception has occurred while making any operation.
+    */    
+    public static String errorMethod(String objectName, String className, String methodName, String sSeverity, Exception ex){
+        Map<String, Error_Messages_Setting__c> errorMessageSettings = Error_Messages_Setting__c.getAll();
+        // clear the list
+        lstErrorLog.clear();
+        //Added by Shashank Tiwari on November 17, 2016 for removal of 'System.' from Exception.getTypeName() return
+        String typeName = ex.getTypeName().remove('System.');
+        //change by Shashank ends here
+        // get the message for the occured Exception
+        String sMessage = '';
+        if(errorMessageSettings != null && errorMessageSettings.get(typeName) != null) {
+            sMessage = errorMessageSettings.get(typeName).value__c + ' - ' + ex.getMessage();//Message Modified by Shashank on November 17, 2016.
+        }
+        
+        // ++ if the issue is of type Exception
+        
+        if(null != ex){
+            objErrorLog = new Error_Log__c();
+            // map the values to the field and put that in the list that will be inserted later
+            objErrorLog.Object_Name__c = objectName;
+            objErrorLog.Apex_Class_Trigger__c = className;
+            objErrorLog.Method_Name__c = methodName;
+            objErrorLog.Description__c = String.valueOf(ex);
+            objErrorLog.Severity__c = sSeverity;
+            objErrorLog.type__c = 'Exception';
+            lstErrorLog.add(objErrorLog);
+        }
+        // check if the size of lstErrorLog is greater than zero. This will happen
+        // if a record has failed while causing the DML operation.
+        if(null != lstErrorLog && lstErrorLog.size()>0){
+            insert lstErrorLog;
+        }
+        return sMessage;
+    }
+    
+    public static void testThis(){
+    
+        Integer i = 1;
+        Integer q = 1;
+        Integer w = 1;
+        Integer e = 1;
+        Integer r = 1;
+        Integer t = 1;
+        Integer y = 1;
+        Integer u = 1;
+        Integer o = 1;
+        Integer p = 1;
+        Integer a = 1;
+        Integer s = 1;
+        Integer d = 1;
+        Integer f = 1;
+        Integer g = 1;
+    
+    }
+}
+
+
+
+//
+catch(Exception ex) {
+           expMsg = UtilityHolder.errorMethod(Constants.REQUEST_OBJ_NAME,CLASS_NAME,METHOD_NAME_SEND_EMAIL_FOR_WAIVED_LETTER_OR_OTHER_FEES,String.valueOf(ApexPages.severity.FATAL), ex);
+            throw ex;
+        }
