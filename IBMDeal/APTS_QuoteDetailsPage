@@ -1,0 +1,691 @@
+<apex:page standardController="Apttus_Proposal__Proposal__c" extensions="APTS_QuoteDetailsController" lightningStylesheets="true" docType="html-5.0" sidebar="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en"/>
+    <apex:slds />
+    <style>
+        .tabExplaination{
+            font-size:15px;
+            font-weight: 800;
+            text-align: center;
+            margin: 12px 20px;
+        }
+        .slds-scope table.tableView{
+            width: 50%;
+            margin: 0 auto;
+        }
+    </style>
+        <apex:outputPanel layout="block">
+
+            <div class="slds-page-header">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+                            <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Rohde Corp - 80,000 Widgets">Quote/Proposal</h1>
+                        <p class="slds-text-body_small slds-line-height_reset">Quote/Proposal Detail • {!proposalList.Name}</p>
+                    </div>
+                </div>
+            </div>
+
+        </apex:outputPanel>
+
+     <apex:form id="frm" styleClass="slds-vf-scope">
+        <apex:pageBlock mode="inlineEdit">
+            <apex:PageBlockButtons location="top" >
+                <apex:commandButton value="Edit" action="{!URLFOR($Page.APTS_QuoteDetailsEditPage, null, [id=Apttus_Proposal__Proposal__c.Id])}" id="mainEdit"/>
+                <apex:commandButton value="Delete" action="{!delete}" id="mainDelete"/>
+                <apex:commandButton value="Upload Artifacts" action="{!onArtifactClick}" id="artifacts"/>
+                <apex:commandButton value="My Approvals" action="{!URLFOR($Page.Apttus_Approval__MyApprovals, null, [id=Apttus_Proposal__Proposal__c.Id])}" id="approvals"/>
+
+
+                <apex:commandButton value="{!$Label.site.save}" id="inlineSave" action="{!onInlineSaveClick}" style="display: none"/>
+                <apex:commandButton value="{!$Label.site.cancel}" id="inlineCancel" onclick="resetInlineEdit()" immediate="true" style="display: none"/>
+            </apex:PageBlockButtons>
+
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:outputPanel layout="block" styleClass="tabExplaination">To post a link, scroll down or <a href="#links">click here</a>.</apex:outputPanel>
+             <!--<apex:tabPanel switchType="client" value="{!selTab}" selectedTab="{!selTab}" id="theTabPanel">-->
+             <apex:tabPanel switchType="client" id="theTabPanel">
+             <apex:tab label="Opportunity & Customer Information" name="Tab1" switchType="client">
+              <apex:outputPanel layout="block" styleClass="tabExplaination">A deal owner should initiate a deal quote by pulling in CRM data directly from Sugar. If certain fields require update you should complete them in both Sugar and Apttus. Please refer to the information buttons related to each data field for more guidance.</apex:outputPanel>
+                   <apex:pageBlockSection columns="2" id="pbs1">
+                        <apex:outputField value="{!proposalList.Name}" style="font-style : Lucida Console;font-size:24px;"/>
+                        <apex:outputField value="{!proposalList.APTS_Customer_Name__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <!--<apex:outputField value="{!proposalList.Apttus_Proposal__Proposal_Name__c}"/>
+ -->
+                        
+                        <apex:outputField value="{!proposalList.APTS_Customer_Number__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_OpportunityNumber__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Customer_Type__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Deal_Type__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Customer_Address__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Sales_Stage__c}"/>
+                        <apex:outputField value="{!proposalList.Apttus_Proposal__Account__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_TCV_OPP__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Country__c }"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Contract_duration_Months__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IOT_integrated_operating_territory__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Win_Odds__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Premier_Elite__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Steps_to_Closure__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Integrated_Account__c}"/>
+
+                        <!--<apex:outputField value="{!proposalList.APTS_Primary_Service_Line__c}"/>-->
+
+                        <apex:outputField value="{!proposalList.APTS_Industry__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Senior_Client_Partner__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Sector__c}"/>
+                        <apex:outputField value="{!proposalList.Apttus_Opportunity__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Market__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Level_10__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Competitor__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Level_17__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Competitive_or_Sole_Source__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Level_15_Description__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_ISACodeCategoryCodeValueList__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Level_20_Description__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Cross_Brand_JVP_Opportunity__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Level_20_Code__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L30OFFERINGID__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Level_30__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Brand__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Primary_Service_Line__c}" >
+                            <apex:actionSupport event="ondblclick" action="{!populateValues}" reRender="pbs1" />
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Roadmap_Status__c}"/>
+
+                    </apex:pageBlockSection>
+                </apex:tab>
+
+                <apex:tab label="Deal Details & Deal Qualification Summary & Deal Qualifying Parameters" name="Tab2" switchType="client">
+                <apex:outputPanel layout="block" styleClass="tabExplaination">Deal detail information has been loaded from Sugar CRM. Additional data will be required to support risk and complexity assessments used in deal reviews and the Integrated Solution Baseline Document (ISBD)</apex:outputPanel>
+                    <apex:pageBlockSection columns="2" title="Deal Qualification Summary"   collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_Oppty_Sum_Value_Prop_Differentiator__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Broader_GBS_S_D_involvement__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Key_Milestone_Activity_Close_Deal__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Win_Strategy_n_Comp__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Sponsor_acknowledge_solution__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Sponsor_acknowledge_sol_desc__c}"/>
+                     <apex:pageBlockSectionItem >
+                        <apex:outputText >Is NDA required during Quoting process</apex:outputText>
+                        <apex:outputField value="{!proposalList.APTS_Is_NDA_Req__c}"/>
+                     </apex:pageBlockSectionItem>
+                        
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="Deal Qualifying Parameters" collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_Strength_Opportunity__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Key_Competitions__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Compelling_Reason_to_Act__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Key_Challenges_to_Winning_Closing__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IBM_Value_Proposition_Win_Strategy__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Sales_Stage_Qualification__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Weakness_Threat__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IBM_Value_Proposition__c}"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="Deal Details" collapsible="false">
+                        <apex:outputField value="{!proposalList.Apttus_QPApprov__Approval_Status__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.Apttus_Proposal__Approval_Stage__c}"/>
+                        <apex:outputField value="{!proposalList.Apttus_QPComply__CreateAgreementWithLineItems__c }"/>
+
+                        <apex:outputField value="{!proposalList.Apttus_Proposal__RelatedProposalId__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Requires_SCAE_SCOE_CMMI_Compliance__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_OSSC_Open_Source_Software__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Any_use_of_Linux_Open_Source_SW__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SOW__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Back_to_back_Agreements__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_WBS__c}"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="Win Plan Details" collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_Board_of_Directors_Approval_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Business_Needs__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Budget_Secured__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Committed_Close_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Compelling_Reason_to_Act__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Client_Final_Approver__c}"/>
+                        <!--<apex:outputField value="{!proposalList.APTS_Client_Sponsor_acknowledge_solution__c}"/>-->
+                        <apex:outputField value="{!proposalList.APTS_Executive_Sponsor__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Final_Proposal_Contract_Delivered__c}"/>
+                        <apex:outputField value="{!proposalList.IBM_Solution_and_Pricing_Release__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IBM_Value_Proposition__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Initial_Proposal_Document_Deliver__c}"/>
+                        <apex:outputField value="{!proposalList.APTSKeyTCsAgreedByClient__c}"/>
+                        <apex:outputField value="{!proposalList.APTSPriceAgreedbyClient__c}"/>
+                        <!--<apex:outputField value="{!proposalList.APTS_RFP_Release_Date__c}"/>-->
+                        <apex:outputField value="{!proposalList.APTS_Skills_Identified_Staff_Plan__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Solution_Agreed_By_Client__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_WorkCouncilRegAppReceived__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+                
+                <apex:tab label="Key Stakeholders" id="Tab3" name="Tab3">
+                      <apex:outputPanel id="Tab3C">
+                     <apex:outputPanel layout="block" styleClass="tabExplaination">Key Stakeholders can include Deal Team Members, Reviewers and Approvers. To add a Deal Team Member <a href="#quoteTeamMembers">click here</a> or scroll below.</apex:outputPanel>
+                     <apex:outputPanel rendered="{!showmsg}" layout="block" style="text-align: center;font-size:10px">All Selected Key Stakeholders need to sign Quote NDA</apex:outputPanel> 
+                     <apex:repeat value="{!stakeHolders.categories}" var="category">
+                         <apex:pageBlockSection title="{!category.label}" columns="2" collapsible="false" >
+                             <apex:repeat value="{!category.roles}" var="role">
+                                 <apex:pageBlockSectionItem helpText="{!role.helpText}" rendered="{!role.role = 'Quote Owner'}">
+                                     <apex:outputPanel layout="block">
+                                     <apex:outputLabel value="Quote Owner " for="CreatedBy"/>
+                                     <apex:outputField value="{!Apttus_Proposal__Proposal__c.createdById}" id="CreatedBy" />
+                                     </apex:outputPanel>
+                                 </apex:pageBlockSectionItem>
+                                 <apex:pageBlockSectionItem helpText="{!role.helpText}" rendered="{!role.role != 'Quote Owner'}">
+                                     <apex:outputPanel layout="block" id="KeyC" >
+                                     <apex:outputLabel value="{!role.role}" for="stakeHolder">
+                                     <image src="{!URLFOR($Resource.QDP1, 'GreenPlusSmall.png')}" id="GreenPlusSmall" styleClass="GreenPlusSmall" height="13" width="13" onclick="showPopup(event)"/>
+                                     </apex:outputLabel>
+                                     <apex:repeat value="{!role.users}" var="user">
+                                         <apex:outputField value="{!user.User__c}" id="stakeHolder" />
+                                         <apex:inlineEditSupport disabled="true"/>
+                                     </apex:repeat>
+                                     </apex:outputPanel>
+                                 </apex:pageBlockSectionItem>
+                             </apex:repeat>
+                         </apex:pageBlockSection>
+                     </apex:repeat>
+                     </apex:outputpanel>
+                    <apex:outputPanel id="tstpopup" styleClass="popupContainer" layout="block">
+                        <apex:outputPanel styleClass="popupBackground" layout="block"/>
+                        <apex:outputPanel styleClass="custPopup" layout="block">
+                            <apex:pageBlock id="tstpopupContainer">
+                                <apex:outputPanel layout="block" styleClass="popupHeader"> Add New Member </apex:outputPanel>
+                                <apex:pageBlockSection id="tstpopupSection" columns="2">
+                                    <apex:inputField id="teamRole" value="{!pro.Quote_Team_Role__c}" required="true"/>
+                                    <apex:outputField value="{!pro.Quote_Proposal__c}"   />
+                                    <apex:inputField value="{!pro.User__c}" required="true"/>
+                                </apex:pageBlockSection>
+                                <apex:outputPanel layout="block" styleClass="popupButton">
+                                    <apex:commandButton action="{!addQTM}" value="Save" />
+                                    <apex:commandButton value="Cancel" immediate="true" onclick="hidePopup()" reRender="false"/>
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    <apex:stylesheet value="{!URLFOR($Resource.QDP1, 'APTS_QDP.css')}"/>
+                    <script>
+                        function showPopup(event) {
+                            var role = event.currentTarget.parentNode.textContent;
+                            role = role.replace(/\s+/g,' ').trim();
+                            var roleField = document.getElementById('{!$Component.tstpopupContainer:tstpopupSection:teamRole}');
+                            document.getElementById('{!$Component.tstpopup}').style.display = "block";
+                            var options = roleField.length;
+                            for(i=0;i<options;i++){
+                                if(role == roleField.options[i].innerHTML){
+                                  roleField.selectedIndex = i;
+                                }
+                            }
+                        }
+                        function hidePopup(){
+                            document.getElementById('{!$Component.tstpopup}').style.display = "none";
+                            return false;     
+                        }
+                    </script>
+              </apex:tab>
+                              
+                 <apex:tab label="Key Milestones / Dates" name="Tab4">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">
+                        <apex:outputLabel >
+                            Default &quot;Deal Close&quot; and &quot;Billing Date (Delivery Date)&quot; fields are populated from Atlas. Align any key dates to Pricing File updates, and estimate Solution Development &amp; Planning Completion Dates using <a href="https://ibm.box.com/s/y42ek89vif34mlpfqbwpgzoyslj0zt3a" target="_blank">Solution and Process Navigator</a>.
+                        </apex:outputLabel>
+                    </apex:outputPanel>
+                    <apex:pageBlockSection title="Key Customer & Contact Dates" columns="2" collapsible="false" >
+                        <apex:outputField value="{!proposalList.APTS_RFI_Issue_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_RFI_Due_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_RFP_Due_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_RFP_Release_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_ROM_NBIE_Due_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Decision_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Billing_Date_Delivery_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Deal_Close_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Delivery_Start_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_ROI_TCO_analysis__c}"/>
+                   </apex:pageBlockSection>
+                   <apex:pageBlockSection title="Key Solution Development Planning & Completion Dates" columns="2" collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_SSM_Engagement_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Initial_Assessment_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Big_Deals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GDPR_Security_Assessment_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IGF_InternationalGlobalFinance_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Risk_Complexity_Assessment__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Optimization_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IBM_OneCloud_Certification__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_DMS_Calculations_AQL_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_CIC_RC_M_PSP_Approvals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_DOU_SBU_other_BU_Date__c }"/>
+                        <apex:outputField value="{!proposalList.APTS_GPE_Pricing_PTI_signoffs_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SRR_Mkt_Solution_Release_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_ITR_Review_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SRR_Europe_Solution_Release_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SIH_Peer_Review_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_PRR_Mkt_Pricing_Approvals__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SIH_Tier_2_Review_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_PRR_Europe_Pricing_Approvals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SIH_Tier_3_Review_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Market_Approvals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.Apttus_Proposal__RFP_Response_Due_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Global_Approvals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Shaping_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Geo_Approvals_Date__c}"/>
+                    </apex:pageBlockSection>
+                     <apex:pageBlockSection title="Key Dates for Reviews" columns="2" collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_Solution_Estimation_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Technical_Delivery_Assessment_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Risk_Review_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_SIH_Approval_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Bid_Metrics_Approval_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GFC_Cross_Border_Approvals_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Solution_Release_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Deal_brd_1_date_Sol_Review_Release__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Pricing_Release_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Deal_Board_2_DB2_date__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+
+                <apex:tab label="Credit Check & Compliance" name="Tab5">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">Input the Credit Check Value, Credit Rating, and the Credit Check Run date here. The other values are in the Financial &amp; Contractual Profile Tab</apex:outputPanel>
+                    <apex:pageBlockSection columns="2">
+                        <apex:outputField value="{!proposalList.APTS_Credit_Check_Expiration_Date__c}">
+                        </apex:outputField>
+
+                        <apex:outputField value="{!proposalList.APTS_Creditcheckvalue__c}">
+                        <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Credit_Check_Run_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Credit_Rating__c}"/>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.APTS_Credit_Check_Status__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_CFO_Approval__c}"/>
+                        <!-- Added fields -->
+                        <apex:outputField value="{!proposalList.X3_Mnths_Maximum_A_R_Exposure__c}"/>
+                        <apex:outputField value="{!proposalList.Max_Cum_Cash_Exposure__c}"/>
+                        <apex:outputField value="{!proposalList.X4_Months_Avg_A_R_Exposure_incl__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+                <apex:tab label="Complexity and Scope" name="Tab6">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">This section will enable the Hub Focal Point to assign the appropriate SSM to the deal</apex:outputPanel>
+                    <apex:pageBlockSection title="Expected Complexity" Collapsible="false" columns="2">
+                        <apex:outputField value="{!proposalList.APTS_Multi_Country_Opportunity__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_CAMS_Deal__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Rate_Card_Applies__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Capital_Investment_Cash_Inj__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Staff_Augmentation__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Cloud_adoption_Hybrid_Cloud_Strat__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Bank_Guarantee_Required__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Financing_required_with_IGF__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Subcontractors_Required__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Requires_Treasury_Review__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Cloud_Business_Solutions_Candidate__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Commt_to_hire_customer_employees__c}"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection title="Scope Window" collapsible="false" columns="2">
+                        <apex:outputField value="{!proposalList.APTS_Solution_Scope_Areas__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Major_enhancements__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Legacy_Development__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Mobile_appdev__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Integration_Development_or_API__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Eam_Industry_Accelerators__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Digital_Modernization__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Package_Development__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Minor_Enhancements__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Digital_Modernization_App_Rewrite__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Web_App_Dev__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Cloud_application_development__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Custom_Development__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_EAM_Mobile_Social_Security__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L1_Support__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_EAM_Agile__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L1_5_Support__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Requirement_to_Rebadge__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L2_Support__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L_3_Support__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+
+                <apex:tab label="Risk Assessments & Attachments" name="Tab7">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">Perform the deal's risk  assessment, verify Export Regulation Compliance, and upload estimation and staffability information</apex:outputPanel>
+
+                    <apex:pageBlockSection columns="2" title="Quote Deal Creator Self Assessment" collapsible="false">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText >Risk Rating</apex:outputText>
+                            <apex:outputpanel >
+                                {!Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Risk_Rating__c}&nbsp;
+                                <apex:commandLink html-role="button" styleClass="slds-button_outline-brand" 
+                                    value="{!IF(Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Risk_Rating__c == 0 || Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Risk_Rating__c == null || !IsQuoteCreator, IF(IsQuoteCreator, 'Create', 'View'), 'Edit')}" 
+                                    action="{!onSelfAssessmentEdit}">
+                                    <apex:param name="ownerId" value="{!CreatorId}"/>
+                                </apex:commandLink>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Comments__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Complexity__c}" />
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Creator_Self_Assessment_Completed_Date__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="TDA Self Assessment" collapsible="false">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText >Risk Rating</apex:outputText>
+                            <apex:outputpanel >
+                                {!Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Risk_Rating__c}&nbsp;
+                                <apex:commandLink html-role="button" styleClass="slds-button_outline-brand" 
+                                    value="{!IF(Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Risk_Rating__c == 0 || Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Risk_Rating__c == null || !IsTda, IF(IsTda, 'Create', 'View'), 'Edit')}" 
+                                    action="{!onSelfAssessmentEdit}">
+                                    <apex:param name="ownerId" value="{!TdaId}"/>
+                                </apex:commandLink>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Comments__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Complexity__c}" />
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.TDA_Self_Assessment_Completed_Date__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="ITR Self Assessment" collapsible="false">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText >Risk Rating</apex:outputText>
+                            <apex:outputpanel >
+                                {!Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Risk_Rating__c}&nbsp;
+                                <apex:commandLink html-role="button" styleClass="slds-button_outline-brand" 
+                                    value="{!IF(Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Risk_Rating__c == 0 || Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Risk_Rating__c == null || !IsItr, IF(IsItr, 'Create', 'View'), 'Edit')}" 
+                                    action="{!onSelfAssessmentEdit}">
+                                    <apex:param name="ownerId" value="{!ItrId}"/>
+                                </apex:commandLink>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Comments__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Complexity__c}" />
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.ITR_Self_Assessment_Completed_Date__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="Risk Reviewer Self Assessment" collapsible="false">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText >Risk Rating</apex:outputText>
+                            <apex:outputpanel >
+                                {!Apttus_Proposal__Proposal__c.Risk_Reviewer_SelfAssessment_Risk_Rating__c}&nbsp;
+                                <apex:commandLink html-role="button" styleClass="slds-button_outline-brand" 
+                                    value="{!IF(Apttus_Proposal__Proposal__c.Risk_Reviewer_SelfAssessment_Risk_Rating__c == 0 || Apttus_Proposal__Proposal__c.Risk_Reviewer_SelfAssessment_Risk_Rating__c == null || !IsRiskReviewer, IF(IsRiskReviewer, 'Create', 'View'), 'Edit')}" 
+                                    action="{!onSelfAssessmentEdit}">
+                                    <apex:param name="ownerId" value="{!RiskReviewerId}"/>
+                                </apex:commandLink>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Risk_Reviewer_Self_Assessment_Comments__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Risk_Reviewer_Assessment_Complexity__c}" />
+                        <apex:outputField value="{!Apttus_Proposal__Proposal__c.Risk_Reviewer_Assessment_Completed_Date__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Risk_Rating__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Final_Complexity__c}"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" title="Other Deal Information" collapsible="false">
+                        <apex:outputField value="{!proposalList.APTS_ERO_Form__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_IS_PO_Drive__c}"/>
+                        <apex:outputField value="{!proposalList.Apttus_PO_Custom_Link__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Customer_Agreement_Attachment__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.Apttus_QPConfig__PONumber__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_AECI__c}"/>
+                        
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection title="Estimation Files - load relevant estimation files for solution that will be used by reviewers to assess the deal." collapsible="false" columns="1">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText >Estimation file included in file</apex:outputText>
+                            <apex:outputField value="{!proposalList.APTS_Estim_file_included__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                            </apex:outputField>
+                            
+                    </apex:pageBlockSectionItem>
+                    <apex:outputField value="{!proposalList.APTS_Bid_Metrics_form_Required__c}"/>
+                    </apex:pageBlockSection>
+
+                    <!--<apex:pageBlockSection title="Staffing Plan" collapsible="false">
+                    <apex:pageBlockSectionItem>-->
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered tableView">
+                        <thead>
+                            <tr >
+                                <th></th>
+                                <th class="slds-text-title_caps" scope="col">Actual</th>
+                                <th class="slds-text-title_caps" scope="col">Target</th>
+                                <th class="slds-text-title_caps" scope="col">Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <th scope="row" >Landed</th>
+                                <td  ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Branded__c}"><apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/> </apex:outputField></td>
+                                <td  ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Branded_Target__c}"/></td>
+                                <td  ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Branded_Comments__c}"/></td>
+                            </tr>
+                            
+                            <tr >
+                                <th scope="row">Onshore</th>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Onshore__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Onshore_Target__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Onshore_Comment__c}"/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Offshore</th>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Offshore__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Offshore_Target__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_Offshore_Comment__c
+}"/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">CIC</th>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_CIC_target__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_CIC_Actual__c}"/></td>
+                                <td ><apex:outputField value="{!proposalList.APTS_Bid_Metrics_CIC_Comments__c}"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                        
+                         <!--</apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>-->
+                    
+                    <apex:pageBlockSection title="Staffabillty Approver - must complete review of staffing plan and ensure open seats have been set up and adequate resourcing is available" collapsible="false">
+                         <apex:outputField value="{!proposalList.APTS_Upload_Staffing_Plan__c}">
+                         <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                         </apex:outputField>
+                         <apex:outputField value="{!proposalList.APTS_Staffing_Plan_Comments__c}"/>
+                         <apex:outputField value="{!proposalList.APTS_Upload_Staff_Review__c}"/>
+                         <apex:outputField value="{!proposalList.APTS_Staffabilty_Review_Comments__c}"/>
+                         <apex:outputField value="{!proposalList.APTS_Staffability_Approver_Dat__c}"/>
+                   </apex:pageBlockSection>
+                   <apex:pageBlockSection title="TDA Reviewer - must complete overall assessment with the following form (insert link) and ensure is in agreement with solution complexity and risk rating" collapsible="false">
+                         <apex:outputField value="{!proposalList.APTS_Assessment_Complete__c}">
+                         <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                         </apex:outputField>
+                         <apex:outputField value="{!proposalList.APTS_Risk_assessment_Comments__c}"/>
+                         <apex:outputField value="{!proposalList.APTS_Technical_Delivery_Assessment_Date__c}"/>
+                   </apex:pageBlockSection>
+                   <apex:pageBlockSection title="{!$Label.Risk_Reviewer_QuoteLabel}" collapsible="false">
+                       <apex:outputField value="{!proposalList.APTS_Review_complete__c}"/>
+                       <apex:outputField value="{!proposalList.APTS_Review_complete_Comments__c}"/>
+                       <apex:outputField value="{!proposalList.APTS_ITR_Review_Date__c}"/>
+                   
+                   </apex:pageBlockSection>
+                </apex:tab>
+                <apex:tab label="Solution Workbench (Works if TCV >$1M)" name="Tab8"  disabled="{!If((proposalList.APTS_OPPSWB__c < 1000000),true,false)}" >
+                <apex:outputPanel layout="block" styleClass="tabExplaination">SWB to be performed by the Senior Solution Manager</apex:outputPanel>
+                    <apex:pageBlockSection columns="2" >
+
+                            <apex:outputField value="{!proposalList.SWB__c}">
+                                <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                            </apex:outputField>
+
+                    </apex:pageBlockSection>
+                    <br/>
+                </apex:tab>
+
+                <apex:tab label="Financial & Contractual Profile" name="Tab9">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">Use the information from the GPE to populate these fields</apex:outputPanel>
+                <apex:pageBlockSection columns="2">
+                        <apex:outputField value="{!proposalList.APTS_Currency__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit" />
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.Contract_Type__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_TCV__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Discounts_for_Payments_in_Advance__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Expected_WIN_Price_K__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Is_there_any_Non_Standard_T_C__c}"/>
+                        <apex:outputField value="{!proposalList.IRR__c}"/>
+                        <apex:outputField value="{!proposalList.Pricing_Structure__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GP__c}"/>
+
+
+                        <apex:outputField value="{!proposalList.APTS_Price_Type__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_PTI__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Inflation_COLA_Included__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GR_Landed_Labor__c}"/>
+                        <apex:outputField value="{!proposalList.Currency_Protection_FX_Clause__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_GR_Remote_Labor__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Is_there_any_Penalties__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GR_Other__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Is_T_T_Cost_Amortized__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_GR_Totals__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Any_use_of_Linux_Open_Source_SW__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Contract_Start_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Is_there_any_Performance_Bond__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Contract_End_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Billing_Payment_Terms_days__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Price_Validity_Date__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Vendor_Selection_Criteria__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_3_Months_Maximum_A_R_Exposure__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Max_Cum_Cash_Exposure__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_4_Months_Avg_A_R_Exposure__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+
+                <apex:tab label="Decision Maker & Role Info" name="Tab10">
+                    <apex:pageBlockSection columns="2">
+                        <apex:outputField value="{!proposalList.APTS_Decision_Maker_1__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Role_1__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Decision_Maker_2__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Role_2__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Decision_Maker_3__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Role_3__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_Decision_Maker_4__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Role_4__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Decision_Maker_5__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Role_5__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+                 <apex:tab label="Contract Registration" name="Tab11">
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputField value="{!proposalList.APTS_Final_MSA_CRA__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_Final_Signed_SOW__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_AECI_contract__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_ERO_if_required__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Credti_check_if_reqd__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_GPE_Pricing_file__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Staffing_Plan_file__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_CSID_Form__c}"/><br/>
+                        
+                        <apex:outputText ><b>Please Enter:</b></apex:outputText>
+                        <apex:outputField value="{!proposalList.APTS_Cust_Billing_Name__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_Custr_Billing_address__c}"/><br/>
+                        <apex:outputField value="{!proposalList.APTS_Data_privacy_sett__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_NDA_Included__c}"/>
+                    </apex:pageBlockSection>
+                </apex:tab>
+                <apex:tab label="{!$Label.PRA_Questions_Tab_Title}" name="checklist">
+                        <apex:outputPanel layout="block" styleClass="tabExplaination">Senior Solution Manager verifies the deal's complexity (PRA Rules)</apex:outputPanel>
+                        <apex:outputText >
+                           <apex:commandButton value="Select Questions for PRA/Other Rules" action="{!onNewChecklistClick}" rendered="{!!isCheckListPresent}"/>
+                           <apex:commandButton value="Edit Questions for PRA/Other Rules" action="{!onNewChecklistClick}" rendered="{!isCheckListPresent}"/>
+                        </apex:outputText>
+                    <br/>
+                    <br/>
+                </apex:tab>
+
+                 
+                 <!-- Approval Tab -->
+                <apex:tab label="{!$Label.Approvals_Tab_Title}" name="Tab12">
+                    <apex:outputPanel layout="block" styleClass="tabExplaination">Once all deal elements are complete, you may submit for approval</apex:outputPanel>
+                     <apex:pageBlockSection columns="2" collapsible="false">
+                         <apex:commandButton value="Select Approver(s)" action="{!onAdhocApproverClick}"/>
+                         <apex:outputField value="{!proposalList.APTS_Approvals__c}"/>
+                     </apex:pageBlockSection>
+                  <!--  <apex:commandButton value="Go to Adhoc Approver Selection Page" action="{!onAdhocApproverClick}"/> -->
+                   
+                   <!--  <apex:pageBlockSection columns="2">
+                        <apex:outputField value="{!proposalList.APTS_L1__c}">
+                            <apex:inlineEditSupport showOnEdit="inlineSave, inlineCancel" hideOnEdit="mainEdit,mainDelete,mainClone,artifacts,approvals" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                        </apex:outputField>
+                        <apex:outputField value="{!proposalList.APTS_L2__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L3__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L4__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L5__c}"/>
+
+                        <apex:outputField value="{!proposalList.APTS_L6__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L7__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L8__c}"/>
+                        <apex:outputField value="{!proposalList.APTS_L9__c}"/>
+                    </apex:pageBlockSection> -->
+                </apex:tab>
+
+            </apex:tabPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+
+    <div id="links"><chatter:feed entityId="{!Apttus_Proposal__Proposal__c.Id}" feedItemType="LinkPost" showPublisher="true" /></div>
+
+    <apex:relatedList list="Tasks__r"/>
+    <a id="quoteTeamMembers"/>
+    <apex:relatedList list="Quote_Team_Members1__r"/>
+    <apex:relatedList list="Apttus_Proposal__RelatedProposals__r"/>
+    <apex:relatedList list="Apttus_Proposal__R00N70000001yUfBEAU__r"/> 
+    <apex:relatedList list="CombinedAttachments" />
+    <apex:relatedList list="ActivityHistories"/> 
+    <apex:relatedList list="Apttus_QPApprov__ApprovalRequests__r"/>
+    
+    
+    
+    
+
+</apex:page>

@@ -1,0 +1,455 @@
+public with sharing class APTS_QuoteDetailsController {
+    public Id proposalId{get;set;}
+    public Apttus_Proposal__Proposal__c proposalList{get;set;}
+    public List<string> options {get;set;}
+    public List<string> shortLabels {get;set;}
+    public String OptionsStr{get;set;}
+    public String  shortLabelsStr {get;set;}
+    public Boolean isCheckListPresent{get;set;}
+    public boolean showmsg {get;set;}
+    public Apttus_Quote_Team_Member__c pro {get; set;}
+
+
+    public KeyStakeHoldersService stakeHolders{get; set;}
+
+
+    public Boolean IsQuoteCreator { 
+        get {  
+            if(IsQuoteCreator == null) {
+                IsQuoteCreator = false;
+            }
+            return IsQuoteCreator;
+        }
+        set;
+    }
+    public Boolean IsTda { 
+        get {  
+            if(IsTda == null) {
+                IsTda = false;
+            }
+            return IsTda;
+        }
+        set;
+    }
+    public Boolean IsItr { 
+        get {  
+            if(IsItr == null) {
+                IsItr = false;
+            }
+            return IsItr;
+        }
+        set;
+    }
+    public Boolean IsRiskReviewer { 
+        get {  
+            if(IsRiskReviewer == null) {
+                IsRiskReviewer = false;
+            }
+            return IsRiskReviewer;
+        }
+        set;
+    }
+    public Id CreatorId { get; set; }
+    public Id TdaId { get; set; }
+    public Id ItrId { get; set; }
+    public Id RiskReviewerId { get; set; }
+    
+    public APTS_QuoteDetailsController(ApexPages.StandardController controller) {
+    
+    String showError   = ApexPages.currentPage().getParameters().get('show_error');
+    String showMessage = ApexPages.currentPage().getParameters().get('validation_message');    
+    if(showError=='true'){
+        
+           ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR,showMessage ));
+    }
+
+        proposalId = ApexPages.currentPage().getParameters().get('id');
+        stakeHolders = new KeyStakeHoldersService();
+        stakeHolders.proposalId = proposalId;
+        stakeHolders.assignRolesToCategories();
+
+
+        isCheckListPresent = false;
+
+        List<Checklist__c> findExistingCheckList = new List<Checklist__c>();
+        findExistingCheckList = [SELECT id FROM Checklist__c WHERE Quote_Proposal__c =: proposalId LIMIT 1];
+
+        if(findExistingCheckList.size() > 0){
+            isCheckListPresent = true;
+        }
+
+        proposalList = [SELECT id,Name,APTS_Approver1__c,APTS_Approver1Email__c,APTS_Approver2Email__c,APTS_Approver2__c,APTS_Approver1UID__c,APTS_Approver2UID__c,APTS_Customer_Name__c,Apttus_Proposal__Proposal_Name__c,APTS_Customer_Number__c,
+                        APTS_OpportunityNumber__c,APTS_Customer_Type__c,APTS_Deal_Type__c,APTS_Customer_Address__c,
+                        APTS_Sales_Stage__c,Apttus_Proposal__Account__c,APTS_Country__c,APTS_Contract_duration_Months__c,
+                        APTS_IOT_integrated_operating_territory__c,APTS_Win_Odds__c,APTS_Premier_Elite__c,APTS_Steps_to_Closure__c,APTS_Integrated_Account__c,
+                        APTS_Primary_Service_Line__c,APTS_Industry__c,APTS_Senior_Client_Partner__c,APTS_Sector__c,Apttus_Opportunity__c,
+                        APTS_Market__c,APTS_Level_10__c,APTS_Competitor__c,APTS_Level_17__c,APTS_Competitive_or_Sole_Source__c,APTS_TCV_OPP__c,
+                        APTS_SRR_Mkt_Solution_Release_Date__c,APTS_SRR_Europe_Solution_Release_Date__c,APTS_Response_Review_Date__c,APTS_SIH_Peer_Review_Date__c,APTS_SIH_Tier_2_Review_Date__c,APTS_SIH_Tier_3_Review_Date__c,APTS_ITR_Review_Date__c,APTS_DOU_SBU_other_BU_Date__c,APTS_Solution_Estimation_Date__c,APTS_GFC_Cross_Border_Approvals_Date__c,APTS_Bid_Metrics_Approval_Date__c,APTS_CIC_RC_M_PSP_Approvals_Date__c,APTS_PRR_Mkt_Pricing_Approvals__c,APTS_PRR_Europe_Pricing_Approvals_Date__c,APTS_Market_Approvals_Date__c,APTS_Geo_Approvals_Date__c,APTS_Decision_Date__c,APTS_ROM_NBIE_Due_Date__c,APTS_Delivery_Start_Date__c,APTS_Initial_Assessment_Date__c,APTS_GDPR_Security_Assessment_Date__c,APTS_IGF_InternationalGlobalFinance_Date__c,APTS_Risk_Complexity_Assessment__c,APTS_IBM_OneCloud_Certification__c,APTS_Global_Approvals_Date__c,APTS_Solution_Release_Date__c,APTS_Deal_Board_2_DB2_date__c,APTS_Big_Deals_Date__c,APTS_Pricing_Release_Date__c,APTS_DB3_LMR_Date__c,
+                   APTS_Finance_Reviewer__c,APTS_Transition_Transformation_Reviewer__c,APTS_Treasury_Reviewer__c,APTS_IGF_Reviewer__c,APTS_Exec_Owner_Partner__c,APTS_Opportunity_Owner__c,APTS_Executive_Sponsor__c, APTS_GBS_Lead_Partner__c,APTS_QA_partner__c,APTS_E2E_Sol_Leader_CSE__c,APTS_Global_Solution_CoE__c,APS_Lead_Architect__c,APTS_Other_Deal_Team__c,APTS_Other_Solution_Manager_s__c,APTS_Other_Senior_Solution_Manager_s__c,APTS_CIC_Delivery_Lead_s__c,APTS_Project_Staffing_Prof__c,APTS_Other_SME__c,APTS_CAMS_Solution_Architect__c,APTS_Common_CB_Sol_Lead__c,APTS_SIH_Solution_Approver__c,APTS_Solution_Deliverability__c,APTS_Other_Trans_Transf__c,APTS_Global_Facil_rev__c,APTS_Data_Secu_Pr__c,APTS_Hub_Reviewer__c,APTS_Final_MSA_CRA__c,APTS_Final_Signed_SOW__c,APTS_AECI_contract__c,APTS_ERO_if_required__c,APTS_Credti_check_if_reqd__c,APTS_GPE_Pricing_file__c,APTS_Staffing_Plan_file__c,APTS_CSID_Form__c,APTS_Cust_Billing_Name__c,APTS_Custr_Billing_address__c,APTS_Data_privacy_sett__c,APTS_Bid_Metrics_CIC_target__c,APTS_Bid_Metrics_CIC_Actual__c,APTS_Bid_Metrics_CIC_Comments__c,APTS_Bid_Metrics_Branded__c,APTS_Bid_Metrics_Branded_Target__c,APTS_Bid_Metrics_Branded_Comments__c,APTS_Bid_Metrics_Onshore__c,APTS_Bid_Metrics_Onshore_Target__c,APTS_Bid_Metrics_Onshore_Comment__c,APTS_Upload_Staffing_Plan__c,APTS_Upload_Staff_Review__c,APTS_Staffability_Approver_Dat__c,APTS_Staffabilty_Review_Comments__c,
+                        APTS_Level_20_Code__c,APTS_Level_15_Description__c,APTS_ISACodeCategoryCodeValueList__c,APTS_NDA_Included__c,
+                        APTS_Level_20_Description__c,APTS_Cross_Brand_JVP_Opportunity__c,APTS_Level_30__c,APTS_Brand__c,APTS_Roadmap_Status__c,
+                        APTS_Oppty_Sum_Value_Prop_Differentiator__c,APTS_Broader_GBS_S_D_involvement__c,APTS_Key_Milestone_Activity_Close_Deal__c,
+                        APTS_Win_Strategy_n_Comp__c,APTS_Client_Sponsor_acknowledge_solution__c,APTS_Client_Sponsor_acknowledge_sol_desc__c,APTS_Strength_Opportunity__c,APTS_Key_Competitions__c,
+                        APTS_Client_Compelling_Reason_to_Act__c,APTS_Key_Challenges_to_Winning_Closing__c,APTS_Bid_Metrics_form_Required__c,
+                        APTS_Sales_Stage_Qualification__c,APTS_Weakness_Threat__c,APTS_IBM_Value_Proposition__c,APTS_IBM_Value_Proposition_Win_Strategy__c,APTS_OPPSWB__c,
+                        Apttus_QPApprov__Approval_Status__c,Apttus_Proposal__RelatedProposalId__c,APTS_Assessment_Complete__c,APTS_Risk_assessment_Comments__c,
+                        APTS_Requires_SCAE_SCOE_CMMI_Compliance__c,APTS_SOW__c,APTS_Back_to_back_Agreements__c,APTS_Review_complete__c,APTS_Review_complete_Comments__c,
+                        APTS_WBS__c,APTS_ERO_Form__c,APTS_Self_Assessment__c,APTS_Risk_Rating__c,APTS_IS_PO_Drive__c,APTS_Bid_Submission_Date__c,APTS_DMS_Calculations_AQL_Date__c,APTS_GPE_Pricing_PTI_signoffs_Date__c,
+                        APTS_Final_Complexity__c,Apttus_PO_Custom_Link__c,APTS_Customer_Agreement_Attachment__c,
+                        Apttus_QPConfig__PONumber__c,APTS_AECI__c,APTS_Approvals__c, APTS_Client_Rep__c,APTS_GBS_GeoCnsl_or_delegate__c, APTS_Delivery_Leader_Partner__c,
+                        APTS_AssocGenCnsl_or_delegate__c, APTS_Solution_Manager__c, APTS_AsstGenCnsl_or_delegate__c,APTS_Bid_Manager__c,APTS_SSAE16_Global_Coordinator__c,
+                        APTS_R_CM_PSP__c, APTS_OSSC_Open_Source_Software__c, APTS_Security_SME__c, APTS_GBS_Sector_Market_GBS_CFO__c, APTS_Transition_Transformation_Manager__c,
+                        APTS_ITR_Leader_Review__c, APTS_Geo_Legal_or_delegate__c, APTS_Technical_Delivery_Assessment_TDA__c, APTS_IBM_Procurement__c, APTS_Risk_Consultant__c,
+                        APTS_GBS_Geo_HR__c, APTS_Staffability_Approver__c, APTS_Sector_Market_HR__c, APTS_SSM_Reviewer__c, APTS_SIH_HR_Leader__c, APTS_HUB_Mgr_Reviewer__c,
+                        APTS_GBS_Geo_Pricing_Manager_or_delegate__c, APTS_Risk_Reviewer__c, APTS_Lead_Account_Partner__c, APTS_Revenue_storm_email__c,
+                        APTS_GBS_Market_GM__c, APTS_GBS_Pricing__c, APTS_Deal_Close_Date__c,APTS_Shaping_Date__c,APTS_Billing_Date_Delivery_Date__c, APTS_Optimization_Date__c,
+                        APTS_RFP_Due_Date__c, APTS_Excellence_Date__c, APTS_RFI_Issue_Date__c, APTS_SIH_Approval_Date__c,APTS_RFI_Due_Date__c, APTS_Technical_Delivery_Assessment_Date__c,
+                        APTS_RFP_Release_Date__c, APTS_Risk_Review_Date__c, APTS_SSM_Engagement_Date__c, APTS_Deal_brd_1_date_Sol_Review_Release__c, APTS_Rough_Order_Magnitude_NBIE_Due_Date__c,
+                        APTS_Deal_board_2_date_Price_Rev_Release__c, APTS_ROI_TCO_analysis__c, APTS_Deal_board_3_date__c, APTS_Client_decision_Perform_Criteria__c,
+                        APTS_Initial_benefit_business_case_just__c, APTS_Credit_Check_Expiration_Date__c, APTS_4_Months_Avg_A_R_Exposure__c, APTS_Creditcheckvalue__c,
+                        APTS_3_Months_Maximum_A_R_Exposure__c, APTS_Credit_Check_Run_Date__c, APTS_Credit_Rating__c, APTS_Credit_Check_Status__c,APTS_Is_NDA_Req__c,
+                        APTS_Max_Cum_Cash_Exposure__c,APTS_Estim_file_included__c, APTS_Multi_Country_Opportunity__c, APTS_CAMS_Deal__c, APTS_Rate_Card_Applies__c,
+                        APTS_Cloud_adoption_Hybrid_Cloud_Strat__c,APTS_Capital_Investment_Cash_Inj__c, APTS_Staff_Augmentation__c,APTS_Staffing_Plan_Comments__c,
+                        APTS_Bank_Guarantee_Required__c, APTS_Financing_required_with_IGF__c, APTS_Subcontractors_Required__c,APTS_Requires_Treasury_Review__c,
+                        APTS_Cloud_Business_Solutions_Candidate__c, APTS_Commt_to_hire_customer_employees__c, SWB__c,APTS_Solution_Scope_Areas__c,
+                        APTS_Major_enhancements__c, APTS_Legacy_Development__c, APTS_Mobile_appdev__c, APTS_Integration_Development_or_API__c,
+                        APTS_Eam_Industry_Accelerators__c, APTS_Digital_Modernization__c, APTS_Package_Development__c, APTS_Minor_Enhancements__c,
+                        APTS_Digital_Modernization_App_Rewrite__c, APTS_Web_App_Dev__c, APTS_Cloud_application_development__c, APTS_Custom_Development__c,
+                        APTS_EAM_Mobile_Social_Security__c, APTS_L1_Support__c, APTS_EAM_Agile__c, APTS_L1_5_Support__c, APTS_Requirement_to_Rebadge__c,
+                        APTS_L2_Support__c, APTS_L_3_Support__c, APTS_Currency__c, Contract_Type__c, APTS_TCV__c, APTS_Discounts_for_Payments_in_Advance__c,
+                        APTS_Expected_WIN_Price_K__c, APTS_Is_there_any_Non_Standard_T_C__c, IRR__c, Pricing_Structure__c, APTS_GP__c, APTS_Price_Type__c,
+                        APTS_PTI__c, APTS_Inflation_COLA_Included__c, APTS_GR_Landed_Labor__c, Currency_Protection_FX_Clause__c, APTS_GR_Remote_Labor__c,
+                        APTS_Is_there_any_Penalties__c, APTS_GR_Other__c, APTS_Is_T_T_Cost_Amortized__c, APTS_GR_Totals__c, APTS_Any_use_of_Linux_Open_Source_SW__c,
+                        APTS_Contract_Start_Date__c, APTS_Is_there_any_Performance_Bond__c, APTS_Contract_End_Date__c, APTS_Billing_Payment_Terms_days__c,
+                        APTS_Price_Validity_Date__c, APTS_Vendor_Selection_Criteria__c, APTS_Decision_Maker_1__c, APTS_Role_1__c, APTS_Decision_Maker_2__c,
+                        APTS_Role_2__c, APTS_Decision_Maker_3__c, APTS_Role_3__c, APTS_Decision_Maker_4__c, APTS_Role_4__c, APTS_Decision_Maker_5__c,
+                        APTS_Role_5__c, Apttus_Proposal__Approval_Stage__c, Apttus_QPComply__CreateAgreementWithLineItems__c,APTS_Offering_Description__c,
+                        APTS_L1__c, APTS_L2__c, APTS_L3__c, APTS_L4__c, APTS_L5__c, APTS_L6__c, APTS_L7__c, APTS_L8__c, APTS_L9__c,APTS_L30OFFERINGID__c,X3_Mnths_Maximum_A_R_Exposure__c,Max_Cum_Cash_Exposure__c,X4_Months_Avg_A_R_Exposure_incl__c,APTS_Board_of_Directors_Approval_Date__c,APTS_Business_Needs__c,APTS_Client_Budget_Secured__c,APTS_Client_Committed_Close_Date__c,APTS_Client_Final_Approver__c,APTS_Exec_Sponsor__c,APTS_Final_Proposal_Contract_Delivered__c,IBM_Solution_and_Pricing_Release__c,APTS_Initial_Proposal_Document_Deliver__c,APTSKeyTCsAgreedByClient__c,APTSPriceAgreedbyClient__c,APTS_Skills_Identified_Staff_Plan__c,APTS_Solution_Agreed_By_Client__c,APTS_WorkCouncilRegAppReceived__c ,APTS_Bid_Metrics_Offshore__c ,APTS_Bid_Metrics_Offshore_Target__c,APTS_Bid_Metrics_Offshore_Comment__c,APTS_CreditcheckStatus__c,APTS_CFO_Approval__c ,
+                        Apttus_Proposal__RFP_Response_Due_Date__c,
+                        OwnerId
+                        FROM Apttus_Proposal__Proposal__c WHERE id =: proposalId LIMIT 1]; 
+                        showmsg = false;
+                        if(proposalList.APTS_Is_NDA_Req__c){
+                           showmsg = true;
+                        }
+        
+         for(APTS_Task__c  T :[select id,APTS_Subject__c from APTS_Task__c where APTS_QuoteProposal__c =:proposalId]){
+                
+                if(T.APTS_Subject__c  =='UPLOAD Final MSA/CRA') proposalList.APTS_Final_MSA_CRA__c  = true; else proposalList.APTS_Final_MSA_CRA__c  = false;
+                if(T.APTS_Subject__c  =='Upload SOW Final Document') proposalList.APTS_Final_Signed_SOW__c  = true; else proposalList.APTS_Final_Signed_SOW__c  = false;
+                if(T.APTS_Subject__c  =='Upload AECI Document') proposalList.APTS_AECI_contract__c  = true; else proposalList.APTS_AECI_contract__c  = false;
+                //if(T.APTS_Subject__c  =='ERO Form Complete') Proposal.APTS_ERO_if_required__c = true;
+                if(T.APTS_Subject__c  =='Upload Credit check details complete') proposalList.APTS_Credti_check_if_reqd__c = true; else proposalList.APTS_Credti_check_if_reqd__c  = false;
+                if(T.APTS_Subject__c  =='Upload Pricing File Document') proposalList.APTS_GPE_Pricing_file__c  = true; else proposalList.APTS_GPE_Pricing_file__c  = false;
+                if(T.APTS_Subject__c  =='Upload Staffing Plan Document') proposalList.APTS_Staffing_Plan_file__c  = true; else proposalList.APTS_Staffing_Plan_file__c  = false;
+                if(T.APTS_Subject__c  =='UPLOAD CSID Form') proposalList.APTS_CSID_Form__c  = true; else proposalList.APTS_CSID_Form__c  = false;
+                
+        }
+        String proposalWarnings = ProposalKeyStakeholdersValService.validateKeyStakeholders(new List<Apttus_Proposal__Proposal__c> {proposalList})[0];
+        If (String.isNotBlank(proposalWarnings)){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING,proposalWarnings));
+        }
+
+        options = new list <String>();
+        shortLabels = new List<String>();
+
+        Schema.sObjectType sobjType= findObjectNameFromRecordIdPrefix(proposalId);
+        System.debug('>>>> sObjeType : '+sobjType);
+        if(sobjType!=null && String.valueOf(sobjType).equalsignorecase('Apttus_Proposal__Proposal__c')){
+            options = getPicklistValues(sobjType,'Apttus_Proposal__Approval_Stage__c');
+        }else if(sobjType!=null && String.valueOf(sobjType).equalsignorecase('Opportunity')){
+            options = getPicklistValues(sobjType,'StageName');
+        }else if(sobjType!=null && String.valueOf(sobjType).equalsignorecase('Apttus__APTS_Agreement__c')){
+            options = getPicklistValues(sobjType,'Apttus__Status_Category__c');
+        }else if(sobjType!=null && String.valueOf(sobjType).equalsignorecase('Apttus_Config2__Order__c')){
+            options = getPicklistValues(sobjType,'Apttus_Config2__Status__c');
+        }
+        System.debug('>>>> options: '+options);
+        Set<String> tempLabelCheck = new Set<String>();
+        for(string option: options){
+            String label = findShortLabel(option);
+            if(!tempLabelCheck.contains(label)){
+                shortLabels.add(label.toUppercase());
+                tempLabelCheck.add(label.toUppercase());
+            }else{
+                shortLabels.add(option.subString(0,2).toUppercase());
+                tempLabelCheck.add(option.subString(0,2).toUppercase());
+            }
+        }
+        OptionsStr = JSON.serialize(Options);
+        shortLabelsStr = JSON.serialize(shortLabels);
+        
+                // adding warning msg
+        if(((proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Credit_Check_Run_Date__c <= system.today()) || (proposalList.APTS_Customer_Type__c == 'Existing' && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 )) && (proposalList.APTS_Credit_Check_Run_Date__c == null || proposalList.APTS_Creditcheckvalue__c == null || proposalList.APTS_Credit_Rating__c == null)){
+            if(proposalList.APTS_Credit_Check_Run_Date__c == null && proposalList.APTS_Creditcheckvalue__c == null && proposalList.APTS_Credit_Rating__c == null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Run Date, Credit Check Value, Credit Rating'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c != null && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() && proposalList.APTS_Creditcheckvalue__c == null && proposalList.APTS_Credit_Rating__c == null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Value and Credit Rating'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c == null && proposalList.APTS_Creditcheckvalue__c != null && proposalList.APTS_Credit_Rating__c == null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Run Date and Credit Rating'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c == null && proposalList.APTS_Creditcheckvalue__c == null && proposalList.APTS_Credit_Rating__c != null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Run Date and Credit Check Value'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c != null && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() && proposalList.APTS_Creditcheckvalue__c != null && proposalList.APTS_Credit_Rating__c == null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Rating'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c != null && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() && proposalList.APTS_Creditcheckvalue__c == null && proposalList.APTS_Credit_Rating__c != null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Value'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c == null && proposalList.APTS_Creditcheckvalue__c != null && proposalList.APTS_Credit_Rating__c != null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please Enter Credit Check Run Date'));
+            }else if(proposalList.APTS_Credit_Check_Run_Date__c > system.today() && proposalList.APTS_Credit_Check_Run_Date__c != null){
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please check the credit check run date its in future'));
+            }
+        }
+         else if((proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today()) || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check value is insufficient, Please rerun the credit check'));
+        }else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check date is expired, Please rerun the credit check'));
+        }else if(proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_CFO_Approval__c == false && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  &&proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_CFO_Approval__c == false && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check rating required CFO approval'));
+        }else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check value is insufficient and credit date has been expired, please rerun the credit check '));
+        }else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check value is insufficient and credit date has been expired and credit rating required CFO approval '));
+        }else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check value is insufficient and credit rating required CFO approval '));
+        }else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today() || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c == proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Expiration_Date__c < System.TODAY() && proposalList.APTS_Credit_Rating__c > 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c <= system.today())){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit rating required CFO approval and credit check date is expired '));
+        }else if(proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_4_Months_Avg_A_R_Exposure__c == null ){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please enter the 4 months average A-R exposure value in Financial & Contractual Profile'));
+        }
+       else if((proposalList.APTS_Customer_Type__c == 'New'  && proposalList.APTS_Credit_Check_Run_Date__c > system.today()) ||  (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Credit_Check_Run_Date__c > system.today() && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000 && proposalList.APTS_Credit_Check_Run_Date__c > system.today())){
+        ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Please check the credit check run date its in future'));
+        }/*else if( proposalList.APTS_Customer_Type__c == 'New' && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Run_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 || (proposalList.APTS_Customer_Type__c == 'Existing'  && proposalList.APTS_Creditcheckvalue__c < proposalList.APTS_TCV__c && proposalList.APTS_Credit_Check_Run_Date__c > System.TODAY() && proposalList.APTS_Credit_Rating__c <= 7 && proposalList.APTS_4_Months_Avg_A_R_Exposure__c > 500000)){
+           ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Credit check date is in future, please check '));
+        }*/
+
+        
+        List<Apttus_Quote_Team_Member__c> quoteTeamMemberAssignments = [SELECT Id, 
+                                                                        Quote_Proposal__c,
+                                                                        Quote_Team_Role__c,
+                                                                        User__c
+                                                                        FROM Apttus_Quote_Team_Member__c
+                                                                        WHERE User__c =: UserInfo.getUserId()
+                                                                        AND Quote_Proposal__c =: proposalId
+                                                                    ];
+        IsQuoteCreator |= proposalList.OwnerId == UserInfo.getUserId();
+        CreatorId = proposalList.OwnerId;
+        for(Apttus_Quote_Team_Member__c quoteTeamMemberAssignment : quoteTeamMemberAssignments) {
+            Boolean IsTda = quoteTeamMemberAssignment.Quote_Team_Role__c == SelfAssessmentService.TdaRoleName;
+            Boolean IsItr = quoteTeamMemberAssignment.Quote_Team_Role__c == SelfAssessmentService.ItrRoleName;
+            Boolean IsRiskReviewer = quoteTeamMemberAssignment.Quote_Team_Role__c == SelfAssessmentService.RiskReviewerRoleName;
+            this.IsTda |= isTda;
+            this.IsItr |= isItr;
+            this.IsRiskReviewer |= isRiskReviewer;
+            
+            if(IsTda) {
+                TdaId = quoteTeamMemberAssignment.User__c;
+            }
+            if(IsItr) {
+                ItrId = quoteTeamMemberAssignment.User__c;
+            }
+            if(IsRiskReviewer) {
+                RiskReviewerId = quoteTeamMemberAssignment.User__c;
+            }
+        }
+        // Added by Sid (Sid.Sinha@ibm.com) on 20-Nov-2018 for Q2CDMA-617 - Add Plus sign image to add new Members for Key Stakeholders Tab
+        pro = new Apttus_Quote_Team_Member__c();
+        pro.Quote_Proposal__c = proposalId;  
+    }
+// End of Constructor
+
+    public PageReference onSelfAssessmentEdit() {
+        PageReference pg = new PageReference('/apex/SelfAssessment_New?id='+proposalId+'&ownerId=' + ApexPages.CurrentPage().getParameters().get('ownerId'));
+        pg.setRedirect(true);
+        return pg;
+    }
+
+    public PageReference onCloneClick(){
+
+        PageReference pg = new PageReference('/apex/APTS_QuoteDetailsEditPage?id='+proposalId);
+        pg.setRedirect(true);
+        return pg;
+
+    }
+
+    public PageReference onArtifactClick(){
+
+        PageReference pg = new PageReference('/apex/APTS_UploadArtifacts?id='+proposalId);
+        pg.setRedirect(true);
+        return pg;
+
+    }
+
+    public PageReference onInlineSaveClick(){
+        System.debug('Hello Am here');
+        PageReference pg;
+        try{
+
+            if(proposalList.APTS_Customer_Number__c == null){
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: Customer Number is required. Please enter in  OPPORTUNITY AND CUSTOMER INFORMATION TAB');
+                ApexPages.addMessage(myMsg);
+                return null;
+            }else if(proposalList.APTS_Customer_Address__c == null){
+
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: Customer City/State is required. Please enter in OPPORTUNITY AND CUSTOMER INFORMATION TAB');
+                ApexPages.addMessage(myMsg);
+                return null;
+
+            }else if(proposalList.APTS_Customer_Type__c == null){
+
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: Customer Type is required. Please enter in OPPORTUNITY AND CUSTOMER INFORMATION TAB');
+                ApexPages.addMessage(myMsg);
+                return null;
+
+            }else if(proposalList.APTS_Market__c == null){
+
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: Market is required. Please enter in OPPORTUNITY AND CUSTOMER INFORMATION TAB ');
+                ApexPages.addMessage(myMsg);
+                return null;
+
+            }else if(proposalList.APTS_SSM_Engagement_Date__c == null){
+
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: SSM Engagement Date is required. Please enter in KEY MILESTONES/DATES TAB');
+                ApexPages.addMessage(myMsg);
+                return null;
+
+            }else if(proposalList.APTS_GP__c == null){
+
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Error: GP% is required. Please enter in FINANCIAL AND CONTRACTUAL PROFILE TAB');
+                ApexPages.addMessage(myMsg);
+                return null;
+            }else if(proposalList.APTS_Multi_Country_Opportunity__c == true && proposalList.APTS_Global_Facil_rev__c == null ){
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Global Facilitation Center (GFC) Reviewer is REQUIRED in KEYSTAKEHOLDER SECTION ');
+                ApexPages.addMessage(myMsg);
+            }
+            else{
+            if(APTS_ProposalLineItemTriggerHandler.run == true){
+                APTS_ProposalLineItemTriggerHandler.run = false;
+                list<Product2>  lstProducts = new list<Product2>();
+                if(proposalList.APTS_Offering_Description__c != null){
+                    lstProducts = [select Id,Name,APTS_L10_DESCRIPTION__c,APTS_L17_Description__c,APTS_L20_DESCRIPTION__c,APTS_L30_FAMILY_CODE__c,APTS_L17_Code_Service_Line__c,APTS_L15_OFFERING_DESCRIPTION__c,APTS_L20_FAMILY_CODE__c,ProductCode from Product2 where id =: proposalList.APTS_Offering_Description__c LIMIT 1];
+                    proposalList.APTS_Level_10__c = lstProducts[0].APTS_L10_DESCRIPTION__c;
+                    proposalList.APTS_Level_17__c = lstProducts[0].APTS_L17_Description__c;
+                    proposalList.APTS_Level_20_Description__c = lstProducts[0].APTS_L20_DESCRIPTION__c;
+                    proposalList.APTS_Level_30__c = lstProducts[0].APTS_L30_FAMILY_CODE__c;
+                    proposalList.APTS_Brand__c = lstProducts[0].APTS_L17_Code_Service_Line__c;
+                    proposalList.APTS_Level_15_Description__c = lstProducts[0].APTS_L15_OFFERING_DESCRIPTION__c;
+                    proposalList.APTS_Level_20_Code__c = lstProducts[0].APTS_L20_FAMILY_CODE__c;
+                    proposalList.APTS_L30OFFERINGID__c = lstProducts[0].ProductCode;
+                    Apttus_Proposal__Proposal_Line_Item__c proposalLineItem = [select id,name, Apttus_Proposal__Product__c from Apttus_Proposal__Proposal_Line_Item__c WHERE Apttus_Proposal__Proposal__c =: proposalList.id LIMIT 1];
+                    proposalLineItem.Apttus_Proposal__Product__c = proposalList.APTS_Offering_Description__c;
+                    update proposalLineItem;
+
+                }
+                }
+                update proposalList;
+
+                pg = new PageReference('/apex/APTS_QuoteDetailsPage?id='+proposalId);
+                pg.setRedirect(true);
+                return pg;
+            }
+
+        }catch(Exception e){
+            ApexPages.addMessages(e);
+        }
+        return null;
+    }
+    //  public boolean verifyValue(){
+    //  return true;
+    // }
+
+    public PageReference onNewChecklistClick(){
+
+    PageReference pg = new PageReference('/apex/APTS_ChecklistDetailsPage?id='+proposalId);
+     pg.setRedirect(true);
+    return pg;
+    }
+
+    public PageReference onAdhocApproverClick(){
+    
+    try {
+        update proposalList;
+    } catch(Exception ex){
+        
+        PageReference pageRef = backToErrorPage();
+        pageRef.getParameters().put('isProposalError','true' );
+        return pageRef;
+    }
+    
+    PageReference pg = new PageReference('/apex/APTS_ApprovalRequestPage?id='+proposalId);
+    pg.setRedirect(true);
+    return pg;
+    }
+
+    public PageReference backToErrorPage() {
+        
+        PageReference pg = new PageReference('/apex/APTS_QuoteDetailsEditPage?id='+proposalId);
+        pg.setRedirect(true);
+        return pg;
+    }
+    public List<string> getPicklistValues(Schema.sObjectType sobjType, String field_name) {
+        List<selectOption> options = new List<selectOption>();
+        list <string> optionList = new list <string>();
+        Schema.sObjectType sobject_type = sobjType; //grab the sobject that was passed
+        Schema.DescribeSObjectResult sobject_describe = sobject_type.getDescribe(); //describe the sobject
+        Map<String, Schema.SObjectField> field_map = sobject_describe.fields.getMap(); //get a map of fields for the passed sobject
+        List<Schema.PicklistEntry> pick_list_values = field_map.get(field_name).getDescribe().getPickListValues(); //grab the list of picklist values for the passed field on the sobject
+        for (Schema.PicklistEntry a : pick_list_values) {
+            //for all values in the picklist list
+            //options.add(new selectOption(a.getValue(), a.getLabel())); //add the value and label to our final list
+            optionList.add(a.getLabel());
+        }
+        return optionList; //return the List
+    }
+    public Schema.SObjectType findObjectNameFromRecordIdPrefix(String recordIdOrPrefix){
+        String objectName = '';
+        Schema.SObjectType sobjType;
+        try{
+            //Get prefix from record ID
+            //This assumes that you have passed at least 3 characters
+            String myIdPrefix = String.valueOf(recordIdOrPrefix).substring(0,3);
+
+            //Get schema information
+            Map<String, Schema.SObjectType> gd =  Schema.getGlobalDescribe();
+
+            //Loop through all the sObject types returned by Schema
+            for(Schema.SObjectType stype : gd.values()){
+                Schema.DescribeSObjectResult r = stype.getDescribe();
+                String prefix = r.getKeyPrefix();
+                System.debug('Prefix is ' + prefix);
+
+                //Check if the prefix matches with requested prefix
+                if(prefix!=null && prefix.equals(myIdPrefix)){
+                    objectName = r.getName();
+                    sobjType = stype;
+                    System.debug('Object Name! ' + objectName);
+                    break;
+                }
+            }
+        }catch(Exception e){
+            System.debug(e);
+        }
+        return sobjType;
+    }
+    public String findShortLabel(String option){
+        String retLabel='';
+        String [] optArray = option.split(' ');
+        System.debug('>>>> optArray : '+optArray);
+        if(optArray.size() > 1){
+            retLabel = optArray[0].subString(0,1)+optArray[1].subString(0,1);
+        }else{
+            retLabel = optArray[0].subString(0,1);
+        }
+        return retLabel;
+    }
+    public void populateValues(){
+        System.debug('====Am here====>'+proposalList.APTS_Offering_Description__c);
+    }
+    // Added by Sid (Sid.Sinha@ibm.com) on 20-Nov-2018 for Q2CDMA-617 - Add Plus sign image to add new Members for Key Stakeholders Tab
+    public PageReference addQTM() {
+        insert pro;
+        PageReference tempPage = new PageReference('/apex/APTS_QuoteDetailsPage?id='+proposalId);    
+        tempPage.setRedirect(true);
+        return tempPage;
+    }
+   
+}
