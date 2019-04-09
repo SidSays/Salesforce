@@ -1,0 +1,26 @@
+List<Smart_Fridge_Reading__e> inkEvents = new List<Smart_Fridge_Reading__e>();
+	Smart_Fridge_Reading__e abc = new Smart_Fridge_Reading__e();
+    abc.deviceId__c ='XZO-5';
+	abc.door__c ='2';
+    abc.temperature__c = 1.1;
+    abc.humidity__c =1.1;
+    abc.ts__c = system.now();
+
+inkEvents.add(abc);
+
+// Call method to publish events
+List<Database.SaveResult> results = EventBus.publish(inkEvents);
+
+// Inspect publishing result for each event
+for (Database.SaveResult sr : results) {
+    if (sr.isSuccess()) {
+        System.debug('Successfully published event.');
+    } else {
+        for(Database.Error err : sr.getErrors()) {
+            System.debug('Error returned: ' +
+                        err.getStatusCode() +
+                        ' - ' +
+                        err.getMessage());
+        }
+    }       
+}
